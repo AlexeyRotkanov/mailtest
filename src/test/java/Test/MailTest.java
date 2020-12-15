@@ -22,7 +22,7 @@ public class MailTest {
 
     private static final String HOMEPAGE_URL = "https://mail.ru/";
     private static final String LOGIN = "distest";
-    private static final String PASSWORD = "Cdznjq25";
+    private static final String PASSWORD = "P@ssword!23";
     private static String mailAddress = "alex.r.epm@gmail.com";
     private static String mailSubject = "test subject";
     private static String mailBody = "test body";
@@ -44,7 +44,7 @@ public class MailTest {
     private static By saveDraftButtonLocator =
             new By.ByXPath("//div[@class='b-sticky js-not-sticky']//*[@data-name='saveDraft']");
     private static By sendDraftButtonLocator =
-            new By.ByXPath("//div[@class='b-sticky js-not-sticky']//*[@data-name='send']");
+            new By.ByXPath("//div[@class='b-sticky js-not-sticky']//*[@data-name='send']/span");
 
     private static By saveStatusLocator =
             new By.ByXPath("//div[@class='b-sticky']//div[@data-mnemo='saveStatus']/span");
@@ -113,7 +113,7 @@ public class MailTest {
     }
 
     @Test(dependsOnMethods = "saveMailAsDraftTest")
-    public void checkDraftMailData() {
+    public void checkDraftMailDataTest() {
         String draftMailData = getLastMailOnPage().getText();
 
         Boolean isDraftMailDataCorrect = draftMailData.contains(mailSubject) && draftMailData.contains(mailBody)
@@ -122,13 +122,16 @@ public class MailTest {
         Assert.assertTrue(isDraftMailDataCorrect, "Draft mail data do not match data entered during creation");
     }
 
-    @Test(dependsOnMethods = "checkDraftMailData")
-    public void sendDraftMail() {
+    @Test(dependsOnMethods = "checkDraftMailDataTest")
+    public void sendDraftMailTest() {
         getLastMailOnPage().click();
 
-        WebElement sendButton = new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
-                .until(ExpectedConditions.presenceOfElementLocated(sendDraftButtonLocator));
-        sendButton.click();
+//        driver.switchTo().defaultContent();
+//        WebElement sendButton = new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
+//                .until(ExpectedConditions.presenceOfElementLocated(sendDraftButtonLocator));
+        new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
+                .until(ExpectedConditions.presenceOfElementLocated(sendDraftButtonLocator)).click();
+//        sendButton.click();
 
         openDraftsFolder();
         Boolean isDraftMailWasNotSent = false;
@@ -138,6 +141,16 @@ public class MailTest {
         }
 
         Assert.assertFalse(isDraftMailWasNotSent, "The draft mail was not send");
+    }
+
+    @Test(dependsOnMethods = "sendDraftMailTest")
+    public void sentMailIsInSendFolderTest() {
+        openSendFolder();
+
+        String lastMailData = getLastMailOnPage().getText();
+
+        Assert.assertTrue(lastMailData.contains(mailSubject), "Subject of mail does not contains test text, " +
+                "probably mail was not sent");
     }
 
     public WebElement getLastMailOnPage() {
@@ -180,9 +193,11 @@ public class MailTest {
     }
 
     public void saveMailAsDraft() {
-        WebElement saveDraftButton = new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
-                .until(ExpectedConditions.elementToBeClickable(saveDraftButtonLocator)); // Often TimeoutException: Expected condition failed: waiting for element to be clickable: By.xpath
-        saveDraftButton.click();
+        new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
+                .until(ExpectedConditions.elementToBeClickable(saveDraftButtonLocator)).click();
+//        WebElement saveDraftButton = new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
+//                .until(ExpectedConditions.elementToBeClickable(saveDraftButtonLocator)); // Often TimeoutException: Expected condition failed: waiting for element to be clickable: By.xpath
+//        saveDraftButton.click();
 
         new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
                 .until(ExpectedConditions.presenceOfElementLocated(saveStatusLocator));
@@ -192,9 +207,11 @@ public class MailTest {
         new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
                 .until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(0));
 
-        WebElement mailBodyField = new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
-                .until(ExpectedConditions.presenceOfElementLocated(mailBodyFieldLocator));  // Often TimeoutException: Expected condition failed: waiting for presence of element located by: By.xpath
-        mailBodyField.sendKeys(mailBody);
+        new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
+                .until(ExpectedConditions.presenceOfElementLocated(mailBodyFieldLocator)).sendKeys(mailBody);
+//        WebElement mailBodyField = new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
+//                .until(ExpectedConditions.presenceOfElementLocated(mailBodyFieldLocator));  // Often TimeoutException: Expected condition failed: waiting for presence of element located by: By.xpath
+//        mailBodyField.sendKeys(mailBody);
 
         driver.switchTo().defaultContent();
     }
