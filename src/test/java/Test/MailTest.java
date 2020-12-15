@@ -1,6 +1,5 @@
 package Test;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -12,7 +11,6 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MailTest {
@@ -20,51 +18,63 @@ public class MailTest {
     private WebDriver driver;
     private final int WAIT_TIMEOUT_SECONDS = 10;
 
+    // Credentials
     private static final String HOMEPAGE_URL = "https://mail.ru/";
     private static final String LOGIN = "distest";
     private static final String PASSWORD = "P@ssword!23";
-    private static String mailAddress = "alex.r.epm@gmail.com";
-    private static String mailSubject = "test subject";
-    private static String mailBody = "test body";
 
-    private static By loginInputFieldLocator =
+    // Data for creating a draft mail
+    private String mailAddress = "alex.r.epm@gmail.com";
+    private String mailSubject = System.currentTimeMillis() + " test subject";
+    private String mailBody = System.currentTimeMillis() + " test body";
+
+    // Sign in fields
+    private By loginInputFieldLocator =
             new By.ByName("login");
-    private static By passwordButtonLocator =
+    private By passwordButtonLocator =
             new By.ByXPath("//input[@name='login']/ancestor::form/button[not(contains(@class, 'second'))]");
-    private static By passwordInputFieldLocator =
+    private By passwordInputFieldLocator =
             new By.ByName("password");
-    private static By enterButtonLocator =
+    private By enterButtonLocator =
             new By.ByXPath("//input[@name='login']/ancestor::form/button[contains(@class, 'second')]");
 
-    private static By menuButtonLocator = new By.ByXPath("//i[contains(@id, 'user-email')]");
-    private static By logoutLinkLocator = new By.ByXPath("//*[contains(@id, 'logoutLink')]");
+    // Top menu
+    private By menuButtonLocator = new By.ByXPath("//i[contains(@id, 'user-email')]");
+    private By logoutLinkLocator = new By.ByXPath("//*[contains(@id, 'logoutLink')]");
 
-    private static By createNewLetterButtonLocator =
-            new By.ByXPath("//div[@class='b-sticky']//*[@data-name='compose']");
-    private static By saveDraftButtonLocator =
-            new By.ByXPath("//div[@class='b-sticky js-not-sticky']//*[@data-name='saveDraft']");
-    private static By sendDraftButtonLocator =
-            new By.ByXPath("//div[@class='b-sticky js-not-sticky']//*[@data-name='send']/span");
+    // Buttons for creating, saving, sending a mail
+    private By createNewLetterButtonLocator =
+            new By.ByXPath("//a[contains(@title, 'Написать письмо')]");
+    private By saveDraftButtonLocator =
+            new By.ByXPath("//span[contains(@data-title-shortcut, 'Ctrl+S')]");
+    private By sendDraftButtonLocator =
+            new By.ByXPath("//span[contains(@data-title-shortcut, 'Ctrl+Enter')]");
 
-    private static By saveStatusLocator =
-            new By.ByXPath("//div[@class='b-sticky']//div[@data-mnemo='saveStatus']/span");
+    // Button for closing 'A mail' popup
+    private By closeMailButtonLocator =
+            new By.ByXPath("//button[contains(@title, 'Закрыть')]");
 
-    private static By mailAddressFieldLocator =
-            new By.ByXPath("//textarea[@data-original-name='To']");
-    private static By mailSubjectFieldLocator =
+    // Button for closing 'Mail sent' popup
+    private By closeSendPopupLocator =
+            new By.ByXPath("//*[contains(@class, 'button2_close')]");
+
+    // Mail fields - address, subject, body
+    private By mailAddressFieldLocator =
+            new By.ByXPath("//div[contains(@class, 'contactsContainer')]//input");
+    private By mailSubjectFieldLocator =
             new By.ByName("Subject");
-    private static By mailBodyFieldLocator =
-            new By.ByXPath("//*[@id='tinymce']/br[1]");
+    private By mailBodyFieldLocator =
+            new By.ByXPath("//*[@role='textbox']/div[1]/br[1]");
 
-    private static By draftsFolderLocator =
-            new By.ByXPath("//*[contains(@class, 'draft')]/following::span[1]");
-    private static By sendFolderLocator =
-            new By.ByXPath("//*[contains(@class, 'folder_send')]/following::span[1]");
+    // Folders
+    private By draftsFolderLocator =
+            new By.ByXPath("//*[contains(@class, 'drafts')]/following::div[1]");
+    private By sendFolderLocator =
+            new By.ByXPath("//*[contains(@class, 'reply')]/following::div[1]");
 
-    private static By draftMailEntryLocator =
-            new By.ByXPath("//*[@id='b-letters']//div[contains(@data-cache-key, '500001')]" +
-                    "//div[contains(@class, 'b-datalist__body')]//div[contains(@class, 'item__info')]");
-
+    // List of letters
+    private By draftMailEntryLocator =
+            new By.ByXPath("//a[contains(@class, 'letter-list-item')]");
 
     @BeforeClass(alwaysRun = true)
     public void setUp() {
@@ -74,8 +84,10 @@ public class MailTest {
 
     @AfterClass(alwaysRun = true)
     public void tearDown() {
-        driver.quit();
-        driver = null;
+        if (driver != null) {
+            driver.quit();
+            driver = null;
+        }
     }
 
     @Test
@@ -85,7 +97,7 @@ public class MailTest {
 
         loginToMailbox(LOGIN, PASSWORD);
 
-        Boolean isMenuLinkContainsLogin = new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
+        boolean isMenuLinkContainsLogin = new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
                 .until(ExpectedConditions.textToBe(menuButtonLocator, LOGIN + "@mail.ru"));
 
         Assert.assertTrue(isMenuLinkContainsLogin, "Menu link is not found, check that user is logged in");
@@ -97,18 +109,15 @@ public class MailTest {
         startToCreateNewMail();
 
         fillInMailAddress(mailAddress);
-
         fillInMailSubject(mailSubject);
-
         fillInMailBody(mailBody);
 
         saveMailAsDraft();
+        closeMailPopup();
 
         openDraftsFolder();
 
-        String draftMailData = getLastMailOnPage().getText();
-
-        Assert.assertTrue(draftMailData.contains(mailSubject), "Subject of mail does not contains test text, " +
+        Assert.assertTrue(getLastMailOnPage().getText().contains(mailSubject), "Subject of mail does not contains test text, " +
                 "probably mail was not saved");
     }
 
@@ -116,130 +125,134 @@ public class MailTest {
     public void checkDraftMailDataTest() {
         String draftMailData = getLastMailOnPage().getText();
 
-        Boolean isDraftMailDataCorrect = draftMailData.contains(mailSubject) && draftMailData.contains(mailBody)
+        boolean isDraftMailDataCorrect = draftMailData.contains(mailSubject) && draftMailData.contains(mailBody)
                 && draftMailData.contains(mailAddress);
 
         Assert.assertTrue(isDraftMailDataCorrect, "Draft mail data do not match data entered during creation");
     }
 
     @Test(dependsOnMethods = "checkDraftMailDataTest")
-    public void sendDraftMailTest() {
+    public void sendDraftMailTest() throws InterruptedException {
         getLastMailOnPage().click();
 
-//        driver.switchTo().defaultContent();
-//        WebElement sendButton = new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
-//                .until(ExpectedConditions.presenceOfElementLocated(sendDraftButtonLocator));
-        new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
-                .until(ExpectedConditions.presenceOfElementLocated(sendDraftButtonLocator)).click();
-//        sendButton.click();
-
+        sendMail();
+        closeSentPopup();
         openDraftsFolder();
-        Boolean isDraftMailWasNotSent = false;
-        if (getAllMailsOnPage().size() != 0) {
-            String lastMailData = getLastMailOnPage().getText();
-            isDraftMailWasNotSent = lastMailData.contains(mailSubject);
-        }
+        ;
 
-        Assert.assertFalse(isDraftMailWasNotSent, "The draft mail was not send");
+        // Sleep added because list of mails is updated slowly and previous state of Draft and Send folders may be captured
+        // Don't know how it can be processed in proper way
+        Thread.sleep(2000);
+
+        boolean isDraftMailWasNotSent = getLastMailOnPage().getText().contains(mailSubject);
+        Assert.assertFalse(isDraftMailWasNotSent, "The draft mail was not send, it was found in Draft folder");
     }
 
     @Test(dependsOnMethods = "sendDraftMailTest")
-    public void sentMailIsInSendFolderTest() {
+    public void sentMailIsInSendFolderTest() throws InterruptedException {
         openSendFolder();
 
-        String lastMailData = getLastMailOnPage().getText();
+        // Add because Send folder is opened quite slowly and draft list can be captured
+        Thread.sleep(2000);
 
-        Assert.assertTrue(lastMailData.contains(mailSubject), "Subject of mail does not contains test text, " +
+//        Just for check current mail data
+//        String lastMailData = getLastMailOnPage().getText();
+//        System.out.println("Last mail in send folder: " + getLastMailOnPage().getText());
+//        System.out.println("Current subject: " + mailSubject);
+//        System.out.println("Contains flag: " + lastMailData.contains(mailSubject));
+
+        Assert.assertTrue(getLastMailOnPage().getText().contains(mailSubject), "Subject of mail does not contains test text, " +
                 "probably mail was not sent");
+    }
+
+    @Test(dependsOnMethods = "sentMailIsInSendFolderTest")
+    public void logoutTest() {
+        logout();
+        boolean isUserLoggedOut = new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
+                .until(ExpectedConditions.urlContains("logout"));
+        Assert.assertTrue(isUserLoggedOut, "User is not logged out");
+    }
+
+    private void logout() {
+        new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
+                .until(ExpectedConditions.elementToBeClickable(logoutLinkLocator)).click();
+    }
+
+    private void closeSentPopup() {
+        new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
+                .until(ExpectedConditions.elementToBeClickable(closeSendPopupLocator)).click();
+    }
+
+    private void sendMail() {
+        new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
+                .until(ExpectedConditions.elementToBeClickable(sendDraftButtonLocator)).click();
     }
 
     public WebElement getLastMailOnPage() {
         return getAllMailsOnPage().get(0);
     }
 
+    private void closeMailPopup() {
+        new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
+                .until(ExpectedConditions.elementToBeClickable(closeMailButtonLocator)).click();
+    }
+
     public void loginToMailbox(String login, String password) {
         fillInLogin(login);
         fillInPassword(password);
 
-        WebElement enterButton = new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
-                .until(ExpectedConditions.elementToBeClickable(enterButtonLocator));
-        enterButton.click();
+        new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
+                .until(ExpectedConditions.elementToBeClickable(enterButtonLocator)).click();
     }
 
     public void fillInPassword(String password) {
-        WebElement passwordButton = new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
-                .until(ExpectedConditions.elementToBeClickable(passwordButtonLocator));
-        passwordButton.click();
+        new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
+                .until(ExpectedConditions.elementToBeClickable(passwordButtonLocator)).click();
 
-        WebElement passwordField = new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
-                .until(ExpectedConditions.visibilityOfElementLocated(passwordInputFieldLocator));
-        passwordField.sendKeys(password);
+        new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
+                .until(ExpectedConditions.visibilityOfElementLocated(passwordInputFieldLocator)).sendKeys(password);
     }
 
     public void fillInLogin(String login) {
-        WebElement loginField = new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
-                .until(ExpectedConditions.presenceOfElementLocated(loginInputFieldLocator));
-        loginField.sendKeys(login);
+        new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
+                .until(ExpectedConditions.presenceOfElementLocated(loginInputFieldLocator)).sendKeys(login);
     }
 
     public void openDraftsFolder() {
-        WebElement draftsFolder = driver.findElement(draftsFolderLocator);
-        draftsFolder.click(); // Sometimes StaleElementReferenceException: stale element reference: element is not attached to the page document
+        driver.findElement(draftsFolderLocator).click();
     }
 
     public void openSendFolder() {
-        WebElement draftsFolder = driver.findElement(sendFolderLocator);
-        draftsFolder.click();
+        driver.findElement(sendFolderLocator).click();
     }
 
     public void saveMailAsDraft() {
         new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
                 .until(ExpectedConditions.elementToBeClickable(saveDraftButtonLocator)).click();
-//        WebElement saveDraftButton = new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
-//                .until(ExpectedConditions.elementToBeClickable(saveDraftButtonLocator)); // Often TimeoutException: Expected condition failed: waiting for element to be clickable: By.xpath
-//        saveDraftButton.click();
-
-        new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
-                .until(ExpectedConditions.presenceOfElementLocated(saveStatusLocator));
     }
 
     public void fillInMailBody(String mailBody) {
         new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
-                .until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(0));
-
-        new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
                 .until(ExpectedConditions.presenceOfElementLocated(mailBodyFieldLocator)).sendKeys(mailBody);
-//        WebElement mailBodyField = new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
-//                .until(ExpectedConditions.presenceOfElementLocated(mailBodyFieldLocator));  // Often TimeoutException: Expected condition failed: waiting for presence of element located by: By.xpath
-//        mailBodyField.sendKeys(mailBody);
-
-        driver.switchTo().defaultContent();
     }
 
     public void fillInMailSubject(String mailSubject) {
-        WebElement mailSubjectField = new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
-                .until(ExpectedConditions.presenceOfElementLocated(mailSubjectFieldLocator));
-        mailSubjectField.sendKeys(mailSubject);
+        new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
+                .until(ExpectedConditions.presenceOfElementLocated(mailSubjectFieldLocator)).sendKeys(mailSubject);
     }
 
     public void fillInMailAddress(String mailAddress) {
-        WebElement mailAddressField = new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
-                .until(ExpectedConditions.presenceOfElementLocated(mailAddressFieldLocator));
-        mailAddressField.sendKeys(mailAddress);
+        new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
+                .until(ExpectedConditions.presenceOfElementLocated(mailAddressFieldLocator)).sendKeys(mailAddress);
     }
 
     public void startToCreateNewMail() {
-        WebElement createNewMailButton = new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
-                .until(ExpectedConditions.presenceOfElementLocated(createNewLetterButtonLocator));
-        createNewMailButton.click();
+        new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
+                .until(ExpectedConditions.presenceOfElementLocated(createNewLetterButtonLocator)).click();
     }
 
     public List<WebElement> getAllMailsOnPage() {
-        List<WebElement> allDraftMails = new ArrayList<WebElement>();
-
-        allDraftMails = new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
+        return new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
                 .until(ExpectedConditions.presenceOfAllElementsLocatedBy(draftMailEntryLocator));
-
-        return allDraftMails;
     }
 }
