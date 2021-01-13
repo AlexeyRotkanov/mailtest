@@ -1,5 +1,6 @@
-package Test;
+package backup;
 
+import com.epam.at.pageobjectmodel.condition.CustomConditions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -13,7 +14,7 @@ import org.testng.annotations.Test;
 
 import java.util.List;
 
-public class MailTest {
+public class MailTestWithoutPO {
 
     private WebDriver driver;
     private final int WAIT_TIMEOUT_SECONDS = 10;
@@ -25,8 +26,8 @@ public class MailTest {
 
     // Data for creating a draft mail
     private String mailAddress = "alex.r.epm@gmail.com";
-    private String mailSubject = System.currentTimeMillis() + " test subject";
-    private String mailBody = System.currentTimeMillis() + " test body";
+    private String mailSubject = System.currentTimeMillis() + " com.epam.at.pageobjectmodel.test subject";
+    private String mailBody = System.currentTimeMillis() + " com.epam.at.pageobjectmodel.test body";
 
     // Sign in fields
     private By loginInputFieldLocator =
@@ -91,7 +92,7 @@ public class MailTest {
     }
 
     @Test
-    public void loginToMailBoxTest() throws InterruptedException {
+    public void loginToMailBoxTest() {
 
         driver.get(HOMEPAGE_URL);
 
@@ -104,7 +105,7 @@ public class MailTest {
     }
 
     @Test(dependsOnMethods = "loginToMailBoxTest")
-    public void saveMailAsDraftTest() throws InterruptedException {
+    public void saveMailAsDraftTest() {
 
         startToCreateNewMail();
 
@@ -117,7 +118,11 @@ public class MailTest {
 
         openDraftsFolder();
 
-        Assert.assertTrue(getLastMailOnPage().getText().contains(mailSubject), "Subject of mail does not contains test text, " +
+        //Thread.sleep(5000);
+        new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
+                .until(CustomConditions.jQueryAjaxCompleted());
+
+        Assert.assertTrue(getLastMailOnPage().getText().contains(mailSubject), "Subject of mail does not contains com.epam.at.pageobjectmodel.test text, " +
                 "probably mail was not saved");
     }
 
@@ -132,36 +137,28 @@ public class MailTest {
     }
 
     @Test(dependsOnMethods = "checkDraftMailDataTest")
-    public void sendDraftMailTest() throws InterruptedException {
+    public void sendDraftMailTest() {
         getLastMailOnPage().click();
 
         sendMail();
         closeSentPopup();
         openDraftsFolder();
-        ;
 
-        // Sleep added because list of mails is updated slowly and previous state of Draft and Send folders may be captured
-        // Don't know how it can be processed in proper way
-        Thread.sleep(2000);
+        new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
+                .until(CustomConditions.jQueryAjaxCompleted());
 
         boolean isDraftMailWasNotSent = getLastMailOnPage().getText().contains(mailSubject);
         Assert.assertFalse(isDraftMailWasNotSent, "The draft mail was not send, it was found in Draft folder");
     }
 
     @Test(dependsOnMethods = "sendDraftMailTest")
-    public void sentMailIsInSendFolderTest() throws InterruptedException {
+    public void sentMailIsInSendFolderTest() {
         openSendFolder();
 
-        // Add because Send folder is opened quite slowly and draft list can be captured
-        Thread.sleep(2000);
+        new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
+                .until(CustomConditions.jQueryAjaxCompleted());
 
-//        Just for check current mail data
-//        String lastMailData = getLastMailOnPage().getText();
-//        System.out.println("Last mail in send folder: " + getLastMailOnPage().getText());
-//        System.out.println("Current subject: " + mailSubject);
-//        System.out.println("Contains flag: " + lastMailData.contains(mailSubject));
-
-        Assert.assertTrue(getLastMailOnPage().getText().contains(mailSubject), "Subject of mail does not contains test text, " +
+        Assert.assertTrue(getLastMailOnPage().getText().contains(mailSubject), "Subject of mail does not contains com.epam.at.pageobjectmodel.test text, " +
                 "probably mail was not sent");
     }
 

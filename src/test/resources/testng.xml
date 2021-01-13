@@ -1,0 +1,9 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+
+<suite name = "MailTest">
+    <test name = "BasedTests">
+        <packages>
+            <package name="com.epam.at.pageobjectmodel.test"/>
+        </packages>
+    </test>
+</suite>
