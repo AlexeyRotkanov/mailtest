@@ -1,7 +1,9 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
 
-<suite name = "MailTest">
+<suite name = "MailTest" parallel="classes" thread-count="2">
     <test name = "BasedTests">
+        <parameter name="browserType" value="chrome"/>
+        <parameter name="webdriverHubUrl" value="http://localhost:4444/wd/hub"/>
         <packages>
             <package name="com.epam.at.pageobjectmodel.test"/>
         </packages>

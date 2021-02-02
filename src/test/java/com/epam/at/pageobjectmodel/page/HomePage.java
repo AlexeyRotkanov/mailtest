@@ -1,8 +1,10 @@
 package com.epam.at.pageobjectmodel.page;
-
 import com.epam.at.pageobjectmodel.condition.CustomConditions;
+
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -26,10 +28,16 @@ public class HomePage extends AbstractPage {
     @FindBy(xpath = "//*[contains(@class, 'reply')]/following::div[1]")
     private WebElement sendFolder;
 
+    @FindBy(xpath = "//*[contains(@class, 'actions:delete')]/following::div[1]")
+    private WebElement trashFolder;
+
+    @FindBy(xpath = "//span[text()='Удалить']")
+    private WebElement contextMenuDelete;
+
     @FindBy(xpath = "//a[contains(@class, 'letter-list-item')]")
     private List<WebElement> draftMailEntries;
 
-    protected HomePage(WebDriver driver) {
+    public HomePage(WebDriver driver) {
         super(driver);
     }
 
@@ -42,6 +50,13 @@ public class HomePage extends AbstractPage {
     public EmailPopupPage startToCreateNewMail() {
         new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
                 .until(ExpectedConditions.visibilityOf(createNewLetterButton)).click();
+        return new EmailPopupPage(driver);
+    }
+
+    public EmailPopupPage startToCreateNewMailUsingHotKeys() {
+        new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
+                .until(ExpectedConditions.visibilityOf(createNewLetterButton));
+        new Actions(driver).sendKeys("n").build().perform();
         return new EmailPopupPage(driver);
     }
 
@@ -63,13 +78,64 @@ public class HomePage extends AbstractPage {
         return this;
     }
 
-    public WebElement getLastMailOnPage() {
-        return draftMailEntries.get(0);
+    public HomePage openTrashFolder() {
+        trashFolder.click();
+
+        new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
+                .until(CustomConditions.jQueryAjaxCompleted());
+
+        return this;
     }
 
-    public EmailPopupPage openLastMailOnPage() {
-        getLastMailOnPage().click();
+    public WebElement getMailFromListOnPage(String mailSubject) {
+        return selectMailBySubjectFromList(mailSubject, draftMailEntries);
+    }
+
+    public EmailPopupPage openMailFromListOnPage(String mailSubject) {
+        selectMailBySubjectFromList(mailSubject, draftMailEntries).click();
         return new EmailPopupPage(driver);
+    }
+
+    public HomePage deleteDraftMailUsingDragNDrop(String mailSubject) {
+
+        WebElement draftMail = selectMailBySubjectFromList(mailSubject, draftMailEntries);
+        new Actions(driver).dragAndDrop(draftMail, trashFolder).build().perform();
+
+        new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
+                .until(CustomConditions.jQueryAjaxCompleted());
+
+        return this;
+    }
+
+    public HomePage deleteMailUsingContextMenu(String mailSubject) {
+
+        WebElement mail = selectMailBySubjectFromList(mailSubject, draftMailEntries);
+        new Actions(driver).contextClick(mail).build().perform();
+
+        JavascriptExecutor jsExecutor = (JavascriptExecutor) driver;
+        jsExecutor.executeScript("$('span:contains(\"Удалить\")').click()");
+
+        return this;
+    }
+
+    public WebElement getMailOnPageUsingJs(String mailSubject) {
+
+        JavascriptExecutor jsExecutor = (JavascriptExecutor) driver;
+        List<WebElement> listOfMails =
+                (List<WebElement>) jsExecutor
+                        .executeScript("var elements = document.querySelectorAll('a.js-letter-list-item'); return elements;");
+
+        return selectMailBySubjectFromList(mailSubject, listOfMails);
+    }
+
+    public WebElement selectMailBySubjectFromList(String mailSubject, List<WebElement> listOfMails) {
+        WebElement mail = null;
+        for (WebElement element: listOfMails) {
+            if (element.getText().contains(mailSubject))
+                mail = element;
+        }
+
+        return mail;
     }
 
     public SignInPage logout() {

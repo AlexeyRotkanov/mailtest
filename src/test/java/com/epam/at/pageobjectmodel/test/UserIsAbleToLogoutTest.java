@@ -1,6 +1,5 @@
 package com.epam.at.pageobjectmodel.test;
 
-import com.epam.at.pageobjectmodel.page.SentPopupPage;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import com.epam.at.pageobjectmodel.page.SignInPage;
@@ -9,7 +8,7 @@ import com.epam.at.pageobjectmodel.dataprovider.AccountCredentials;
 public class UserIsAbleToLogoutTest extends InitialTest {
 
     @Test(dataProviderClass = AccountCredentials.class, dataProvider = "accountCredentials")
-    public void logoutTest(String login, String password, String mailAddress) {
+    public void logoutTest(String login, String password) {
 
         new SignInPage(driver)
                 .openPage()

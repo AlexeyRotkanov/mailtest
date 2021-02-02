@@ -1,7 +1,9 @@
 package com.epam.at.pageobjectmodel.page;
 
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -23,7 +25,7 @@ public class EmailPopupPage extends HomePage {
     @FindBy(name = "Subject")
     private WebElement mailSubjectField;
 
-    @FindBy(xpath = "//*[@role='textbox']/div[1]/br[1]")
+    @FindBy(xpath = "//*[@role='textbox']")
     private WebElement mailBodyField;
 
     protected EmailPopupPage(WebDriver driver) {
@@ -48,6 +50,13 @@ public class EmailPopupPage extends HomePage {
 
     public EmailPopupPage saveMailAsDraft() {
         saveDraftButton.click();
+        return this;
+    }
+
+    public EmailPopupPage saveMailAsDraftUsingHotKeys() {
+        Actions action = new Actions(driver);
+        action.keyDown(Keys.CONTROL).sendKeys("s").build().perform();
+        action.keyUp(Keys.CONTROL).build().perform();
         return this;
     }
 

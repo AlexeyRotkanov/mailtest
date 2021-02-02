@@ -7,11 +7,12 @@ import com.epam.at.pageobjectmodel.dataprovider.AccountCredentials;
 
 public class SentMailIsSavedInSentFolderTest extends InitialTest {
 
-    private String mailSubject = System.currentTimeMillis() + " test subject";
-    private String mailBody = System.currentTimeMillis() + " test body";
+    private String mailSubject = System.currentTimeMillis() + "_test_subject";
+    private String mailBody = System.currentTimeMillis() + "_test_body";
+    private String mailAddress = "alex.r.epm@gmail.com";
 
     @Test(dataProviderClass = AccountCredentials.class, dataProvider = "accountCredentials")
-    public void sentMailIsInSentFolderTest(String login, String password, String mailAddress) {
+    public void sentMailIsInSentFolderTest(String login, String password) {
 
         String lastSentMailText = new SignInPage(driver)
                 .openPage()
@@ -23,14 +24,14 @@ public class SentMailIsSavedInSentFolderTest extends InitialTest {
                 .saveMailAsDraft()
                 .closeMailPopup()
                 .openDraftsFolder()
-                .openLastMailOnPage()
+                .openMailFromListOnPage(mailSubject)
                 .sendDraftMail()
                 .closeSentMailPopup()
                 .openSentFolder()
-                .getLastMailOnPage()
+                .getMailFromListOnPage(mailSubject)
                 .getText();
 
-        Assert.assertTrue(lastSentMailText.contains(mailSubject), "Subject of mail does not contains com.epam.at.pageobjectmodel.test text, " +
+        Assert.assertTrue(lastSentMailText.contains(mailSubject), "Subject of mail does not contains test text, " +
                 "probably mail was not sent");
     }
 }

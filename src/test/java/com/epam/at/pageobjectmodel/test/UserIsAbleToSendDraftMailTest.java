@@ -1,5 +1,6 @@
 package com.epam.at.pageobjectmodel.test;
 
+import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import com.epam.at.pageobjectmodel.page.SignInPage;
@@ -7,13 +8,14 @@ import com.epam.at.pageobjectmodel.dataprovider.AccountCredentials;
 
 public class UserIsAbleToSendDraftMailTest extends InitialTest {
 
-    private String mailSubject = System.currentTimeMillis() + " test subject";
-    private String mailBody = System.currentTimeMillis() + " test body";
+    private String mailSubject = System.currentTimeMillis() + "_test_subject";
+    private String mailBody = System.currentTimeMillis() + "_test_body";
+    private String mailAddress = "alex.r.epm@gmail.com";
 
     @Test(dataProviderClass = AccountCredentials.class, dataProvider = "accountCredentials")
-    public void sendDraftMailTest(String login, String password, String mailAddress) {
+    public void sendDraftMailTest(String login, String password) {
 
-        String lastDraftMailText = new SignInPage(driver)
+        WebElement lastDraftMail = new SignInPage(driver)
                 .openPage()
                 .signInToMailbox(login, password)
                 .startToCreateNewMail()
@@ -23,14 +25,12 @@ public class UserIsAbleToSendDraftMailTest extends InitialTest {
                 .saveMailAsDraft()
                 .closeMailPopup()
                 .openDraftsFolder()
-                .openLastMailOnPage()
+                .openMailFromListOnPage(mailSubject)
                 .sendDraftMail()
                 .closeSentMailPopup()
                 .openDraftsFolder()
-                .getLastMailOnPage()
-                .getText();
+                .getMailFromListOnPage(mailSubject);
 
-        boolean isDraftMailWasNotSent = lastDraftMailText.contains(mailSubject);
-        Assert.assertFalse(isDraftMailWasNotSent, "The draft mail was not send, it was found in Draft folder");
+        Assert.assertTrue(lastDraftMail == null, "The draft mail was not send, it was found in Draft folder");
     }
 }

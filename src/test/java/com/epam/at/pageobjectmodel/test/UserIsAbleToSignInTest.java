@@ -8,7 +8,7 @@ import com.epam.at.pageobjectmodel.dataprovider.AccountCredentials;
 public class UserIsAbleToSignInTest extends InitialTest {
 
     @Test(dataProviderClass = AccountCredentials.class, dataProvider = "accountCredentials")
-    public void loginToMailBoxTest(String login, String password, String mailAddress) {
+    public void loginToMailBoxTest(String login, String password) {
 
         new SignInPage(driver)
                 .openPage()
