@@ -1,33 +1,35 @@
-package com.epam.at.pageobjectmodel.test;
+package com.epam.at.pageobjectmodel.tests;
 
-import com.epam.at.pageobjectmodel.dataprovider.AccountCredentials;
-import com.epam.at.pageobjectmodel.page.SignInPage;
+import com.epam.at.pageobjectmodel.dataproviders.AccountCredentials;
+import com.epam.at.pageobjectmodel.objects.Mail;
+import com.epam.at.pageobjectmodel.objects.User;
+import com.epam.at.pageobjectmodel.pages.SignInPage;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class DeleteDraftMailUsingDragNDropTest extends InitialTest {
 
-    private String mailSubject = System.currentTimeMillis() + "_test_subject";
-    private String mailBody = System.currentTimeMillis() + "_test_body";
-    private String mailAddress = "alex.r.epm@gmail.com";
+    private Mail mail = new Mail();
 
     @Test(dataProviderClass = AccountCredentials.class, dataProvider = "accountCredentials")
     public void checkDraftMailIsDeleted(String login, String password) {
 
+        User user = new User(login, password);
+
         WebElement lastDraftMail = new SignInPage(driver)
                 .openPage()
-                .signInToMailbox(login, password)
+                .signInToMailbox(user.getUsername(), user.getPassword())
                 .startToCreateNewMailUsingHotKeys()
-                .fillInMailAddress(mailAddress)
-                .fillInMailSubject(mailSubject)
-                .fillInMailBody(mailBody)
+                .fillInMailAddress(mail.getAddressTo())
+                .fillInMailSubject(mail.getSubject())
+                .fillInMailBody(mail.getBody())
                 .saveMailAsDraftUsingHotKeys()
                 .closeMailPopup()
                 .openDraftsFolder()
-                .deleteDraftMailUsingDragNDrop(mailSubject)
+                .deleteDraftMailUsingDragNDrop(mail.getSubject())
                 .openTrashFolder()
-                .getMailFromListOnPage(mailSubject);
+                .getMailFromListOnPage(mail.getSubject());
 
         Assert.assertFalse(lastDraftMail == null, "Mail with given subject is not found in Trash folder, " +
                 "probably mail was not deleted");

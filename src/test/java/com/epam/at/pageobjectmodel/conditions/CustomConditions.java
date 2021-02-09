@@ -1,4 +1,4 @@
-package com.epam.at.pageobjectmodel.condition;
+package com.epam.at.pageobjectmodel.conditions;
 
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;

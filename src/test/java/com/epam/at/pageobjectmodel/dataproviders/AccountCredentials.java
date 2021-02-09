@@ -1,4 +1,4 @@
-package com.epam.at.pageobjectmodel.dataprovider;
+package com.epam.at.pageobjectmodel.dataproviders;
 
 import org.testng.annotations.DataProvider;
 

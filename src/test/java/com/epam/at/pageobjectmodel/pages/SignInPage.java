@@ -1,6 +1,6 @@
-package com.epam.at.pageobjectmodel.page;
+package com.epam.at.pageobjectmodel.pages;
 
-import com.epam.at.pageobjectmodel.condition.CustomConditions;
+import com.epam.at.pageobjectmodel.conditions.CustomConditions;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;

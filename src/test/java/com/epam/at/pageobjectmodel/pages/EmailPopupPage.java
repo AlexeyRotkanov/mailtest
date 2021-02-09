@@ -1,4 +1,4 @@
-package com.epam.at.pageobjectmodel.page;
+package com.epam.at.pageobjectmodel.pages;
 
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
