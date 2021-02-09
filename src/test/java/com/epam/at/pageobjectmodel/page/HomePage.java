@@ -2,8 +2,10 @@ package com.epam.at.pageobjectmodel.page;
 import com.epam.at.pageobjectmodel.condition.CustomConditions;
 
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -36,6 +38,9 @@ public class HomePage extends AbstractPage {
 
     @FindBy(xpath = "//a[contains(@class, 'letter-list-item')]")
     private List<WebElement> draftMailEntries;
+
+    @FindBy(xpath = "//a[contains(@class, 'letter-list-item')]//div[@class='checkbox']")
+    private List<WebElement> mailEntriesCheckboxes;
 
     public HomePage(WebDriver driver) {
         super(driver);
@@ -98,8 +103,16 @@ public class HomePage extends AbstractPage {
 
     public HomePage deleteDraftMailUsingDragNDrop(String mailSubject) {
 
-        WebElement draftMail = selectMailBySubjectFromList(mailSubject, draftMailEntries);
-        new Actions(driver).dragAndDrop(draftMail, trashFolder).build().perform();
+        WebElement draftMail = selectAndCheckMailBySubjectFromList(mailSubject, draftMailEntries);
+        Point trashPoint = trashFolder.getLocation();
+        System.out.println("Coordinates x: " + trashPoint.getX() + ", y: " + trashPoint.getY());
+
+            new Actions(driver).moveToElement(draftMail).build().perform();
+            new Actions(driver).clickAndHold().build().perform();
+            new Actions(driver).moveByOffset(trashPoint.getX(), trashPoint.getY()).build().perform();
+            new Actions(driver).release().build().perform();
+
+//        new Actions(driver).dragAndDrop(draftMail, trashFolder).build().perform();
 
         new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
                 .until(CustomConditions.jQueryAjaxCompleted());
@@ -130,9 +143,35 @@ public class HomePage extends AbstractPage {
 
     public WebElement selectMailBySubjectFromList(String mailSubject, List<WebElement> listOfMails) {
         WebElement mail = null;
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         for (WebElement element: listOfMails) {
             if (element.getText().contains(mailSubject))
                 mail = element;
+        }
+
+        return mail;
+    }
+
+    public WebElement selectAndCheckMailBySubjectFromList(String mailSubject, List<WebElement> listOfMails) {
+        WebElement mail = null;
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        for (int i = 0; i < listOfMails.size(); i++) {
+            if (listOfMails.get(i).getText().contains(mailSubject)) {
+                mail = listOfMails.get(i);
+                new Actions(driver).moveToElement(listOfMails.get(i)).build().perform();
+                new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
+                        .until(ExpectedConditions.elementToBeClickable(mailEntriesCheckboxes.get(i))).click();
+                break;
+            }
         }
 
         return mail;

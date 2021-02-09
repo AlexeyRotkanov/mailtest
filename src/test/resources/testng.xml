@@ -4,8 +4,11 @@
     <test name = "BasedTests">
         <parameter name="browserType" value="chrome"/>
         <parameter name="webdriverHubUrl" value="http://localhost:4444/wd/hub"/>
-        <packages>
-            <package name="com.epam.at.pageobjectmodel.test"/>
-        </packages>
+        <classes>
+            <class name="com.epam.at.pageobjectmodel.test.DeleteDraftMailUsingDragNDropTest"></class>
+        </classes>
+<!--        <packages>-->
+<!--            <package name="com.epam.at.pageobjectmodel.test"/>-->
+<!--        </packages>-->
     </test>
 </suite>

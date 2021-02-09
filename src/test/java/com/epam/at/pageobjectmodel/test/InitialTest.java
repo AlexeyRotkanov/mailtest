@@ -6,6 +6,7 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 
 import java.net.MalformedURLException;
@@ -17,7 +18,8 @@ public class InitialTest {
 
     @BeforeClass(alwaysRun = true)
     @Parameters({"browserType", "webdriverHubUrl"})
-    protected void setUp(String browserType, String webdriverHubUrl) {
+    protected void setUp(@Optional("chrome") String browserType,
+                         @Optional("http://localhost:4444/wd/hub") String webdriverHubUrl) {
 
         try {
             if (browserType.equals("chrome")) {
