@@ -1,5 +1,7 @@
 package com.epam.at.pageobjectmodel.objects;
 
+import com.epam.at.pageobjectmodel.tools.GenerateDefaultMailData;
+
 public class Mail {
 
     private String addressTo;
@@ -8,8 +10,8 @@ public class Mail {
 
     public Mail() {
         addressTo = "alex.r.epm@gmail.com";
-        subject = System.currentTimeMillis() + "_test_subject";
-        body = System.currentTimeMillis() + "_test_body";
+        subject = GenerateDefaultMailData.generateMailSubject();
+        body = GenerateDefaultMailData.generateMailBody();
     }
 
     public Mail(String addressTo, String subject, String body) {
