@@ -1,4 +1,5 @@
 package com.epam.at.pageobjectmodel.pages;
+
 import com.epam.at.pageobjectmodel.conditions.CustomConditions;
 
 import org.openqa.selenium.JavascriptExecutor;
@@ -29,7 +30,8 @@ public class HomePage extends AbstractPage {
     @FindBy(xpath = "//*[contains(@class, 'reply')]/following::div[1]")
     private WebElement sendFolder;
 
-    @FindBy(xpath = "//*[contains(@class, 'actions:delete')]/following::div[1]")
+//    @FindBy(xpath = "//*[contains(@class, 'actions:delete')]/following::div[1]")
+    @FindBy(xpath = "//a[@href='/trash/']")
     private WebElement trashFolder;
 
     @FindBy(xpath = "//span[text()='Удалить']")
@@ -83,8 +85,9 @@ public class HomePage extends AbstractPage {
     }
 
     public HomePage openTrashFolder() {
-        trashFolder.click();
-
+//        trashFolder.click();
+        new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
+                .until(ExpectedConditions.visibilityOf(trashFolder)).click();
         new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
                 .until(CustomConditions.jQueryAjaxCompleted());
 
@@ -103,15 +106,8 @@ public class HomePage extends AbstractPage {
     public HomePage deleteDraftMailUsingDragNDrop(String mailSubject) {
 
         WebElement draftMail = selectAndCheckMailBySubjectFromList(mailSubject, draftMailEntries);
-        Point trashPoint = trashFolder.getLocation();
-        System.out.println("Coordinates x: " + trashPoint.getX() + ", y: " + trashPoint.getY());
 
-            new Actions(driver).moveToElement(draftMail).build().perform();
-            new Actions(driver).clickAndHold().build().perform();
-            new Actions(driver).moveByOffset(trashPoint.getX(), trashPoint.getY()).build().perform();
-            new Actions(driver).release().build().perform();
-
-//        new Actions(driver).dragAndDrop(draftMail, trashFolder).build().perform();
+        new Actions(driver).dragAndDrop(draftMail, trashFolder).build().perform();
 
         new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
                 .until(CustomConditions.jQueryAjaxCompleted());
@@ -147,7 +143,7 @@ public class HomePage extends AbstractPage {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        for (WebElement element: listOfMails) {
+        for (WebElement element : listOfMails) {
             if (element.getText().contains(mailSubject))
                 mail = element;
         }

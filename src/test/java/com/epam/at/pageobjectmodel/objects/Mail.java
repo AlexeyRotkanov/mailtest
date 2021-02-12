@@ -4,12 +4,14 @@ import com.epam.at.pageobjectmodel.tools.GenerateDefaultMailData;
 
 public class Mail {
 
+    private final String MAIL_ADDRESS_TO = "alex.r.epm@gmail.com";
+
     private String addressTo;
     private String subject;
     private String body;
 
     public Mail() {
-        addressTo = "alex.r.epm@gmail.com";
+        addressTo = MAIL_ADDRESS_TO;
         subject = GenerateDefaultMailData.generateMailSubject();
         body = GenerateDefaultMailData.generateMailBody();
     }
