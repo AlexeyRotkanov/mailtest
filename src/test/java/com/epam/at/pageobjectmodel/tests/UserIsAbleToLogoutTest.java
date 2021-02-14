@@ -1,5 +1,7 @@
 package com.epam.at.pageobjectmodel.tests;
 
+import com.epam.at.pageobjectmodel.decorators.CustomDriverDecorator;
+import com.epam.at.pageobjectmodel.drivermanagers.WebDriverSingleton;
 import com.epam.at.pageobjectmodel.objects.User;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -13,12 +15,13 @@ public class UserIsAbleToLogoutTest extends InitialTest {
 
         User user = new User(login, password);
 
-        new SignInPage(driver)
+        new SignInPage(new CustomDriverDecorator(WebDriverSingleton
+                .getWebDriverInstance()))
                 .openPage()
                 .signInToMailbox(user.getUsername(), user.getPassword())
                 .logout();
 
-        boolean isUserLoggedOut = driver.getCurrentUrl().contains("logout");
+        boolean isUserLoggedOut = WebDriverSingleton.getWebDriverInstance().getCurrentUrl().contains("logout");
         Assert.assertTrue(isUserLoggedOut, "User is not logged out");
     }
 }

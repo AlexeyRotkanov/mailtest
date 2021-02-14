@@ -2,8 +2,10 @@ package com.epam.at.pageobjectmodel.pages;
 
 import com.epam.at.pageobjectmodel.conditions.CustomConditions;
 
+import com.epam.at.pageobjectmodel.tools.Delay;
+import com.epam.at.pageobjectmodel.tools.MarkMail;
+import com.epam.at.pageobjectmodel.tools.SelectMail;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -30,7 +32,6 @@ public class HomePage extends AbstractPage {
     @FindBy(xpath = "//*[contains(@class, 'reply')]/following::div[1]")
     private WebElement sendFolder;
 
-//    @FindBy(xpath = "//*[contains(@class, 'actions:delete')]/following::div[1]")
     @FindBy(xpath = "//a[@href='/trash/']")
     private WebElement trashFolder;
 
@@ -59,7 +60,7 @@ public class HomePage extends AbstractPage {
         return new EmailPopupPage(driver);
     }
 
-    public EmailPopupPage startToCreateNewMailUsingHotKeys() {
+    public EmailPopupPage startToCreateNewMailUsingHotKeys(WebDriver driver) {
         new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
                 .until(ExpectedConditions.visibilityOf(createNewLetterButton));
         new Actions(driver).sendKeys("n").build().perform();
@@ -85,7 +86,7 @@ public class HomePage extends AbstractPage {
     }
 
     public HomePage openTrashFolder() {
-//        trashFolder.click();
+
         new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
                 .until(ExpectedConditions.visibilityOf(trashFolder)).click();
         new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
@@ -95,17 +96,17 @@ public class HomePage extends AbstractPage {
     }
 
     public WebElement getMailFromListOnPage(String mailSubject) {
-        return selectMailBySubjectFromList(mailSubject, draftMailEntries);
+        return SelectMail.selectMailBySubject(mailSubject, draftMailEntries);
     }
 
     public EmailPopupPage openMailFromListOnPage(String mailSubject) {
-        selectMailBySubjectFromList(mailSubject, draftMailEntries).click();
+        SelectMail.selectMailBySubject(mailSubject, draftMailEntries).click();
         return new EmailPopupPage(driver);
     }
 
     public HomePage deleteDraftMailUsingDragNDrop(String mailSubject) {
 
-        WebElement draftMail = selectAndCheckMailBySubjectFromList(mailSubject, draftMailEntries);
+        WebElement draftMail = markMailBySubjectInList(mailSubject, draftMailEntries);
 
         new Actions(driver).dragAndDrop(draftMail, trashFolder).build().perform();
 
@@ -117,7 +118,7 @@ public class HomePage extends AbstractPage {
 
     public HomePage deleteMailUsingContextMenu(String mailSubject) {
 
-        WebElement mail = selectMailBySubjectFromList(mailSubject, draftMailEntries);
+        WebElement mail = SelectMail.selectMailBySubject(mailSubject, draftMailEntries);
         new Actions(driver).contextClick(mail).build().perform();
 
         JavascriptExecutor jsExecutor = (JavascriptExecutor) driver;
@@ -127,49 +128,20 @@ public class HomePage extends AbstractPage {
     }
 
     public WebElement getMailOnPageUsingJs(String mailSubject) {
+        Delay.makeDelay(1000);
 
         JavascriptExecutor jsExecutor = (JavascriptExecutor) driver;
         List<WebElement> listOfMails =
                 (List<WebElement>) jsExecutor
                         .executeScript("var elements = document.querySelectorAll('a.js-letter-list-item'); return elements;");
 
-        return selectMailBySubjectFromList(mailSubject, listOfMails);
+        return SelectMail.selectMailBySubject(mailSubject, listOfMails);
     }
 
-    public WebElement selectMailBySubjectFromList(String mailSubject, List<WebElement> listOfMails) {
-        WebElement mail = null;
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        for (WebElement element : listOfMails) {
-            if (element.getText().contains(mailSubject))
-                mail = element;
-        }
+    public WebElement markMailBySubjectInList(String mailSubject, List<WebElement> listOfMails) {
 
-        return mail;
-    }
-
-    public WebElement selectAndCheckMailBySubjectFromList(String mailSubject, List<WebElement> listOfMails) {
-        WebElement mail = null;
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        for (int i = 0; i < listOfMails.size(); i++) {
-            if (listOfMails.get(i).getText().contains(mailSubject)) {
-                mail = listOfMails.get(i);
-                new Actions(driver).moveToElement(listOfMails.get(i)).build().perform();
-                new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
-                        .until(ExpectedConditions.elementToBeClickable(mailEntriesCheckboxes.get(i))).click();
-                break;
-            }
-        }
-
-        return mail;
+        return MarkMail.markMailBySubject(mailSubject, listOfMails, mailEntriesCheckboxes,
+                driver, WAIT_TIMEOUT_SECONDS);
     }
 
     public SignInPage logout() {

@@ -1,6 +1,8 @@
 package com.epam.at.pageobjectmodel.tests;
 
 import com.epam.at.pageobjectmodel.dataproviders.AccountCredentials;
+import com.epam.at.pageobjectmodel.decorators.CustomDriverDecorator;
+import com.epam.at.pageobjectmodel.drivermanagers.WebDriverSingleton;
 import com.epam.at.pageobjectmodel.objects.Mail;
 import com.epam.at.pageobjectmodel.objects.User;
 import com.epam.at.pageobjectmodel.pages.SignInPage;
@@ -17,10 +19,11 @@ public class DeleteDraftMailUsingContextMenuTest extends InitialTest {
 
         User user = new User(login, password);
 
-        WebElement lastDeletedMail = new SignInPage(driver)
+        WebElement lastDeletedMail = new SignInPage(new CustomDriverDecorator(WebDriverSingleton
+                .getWebDriverInstance()))
                 .openPage()
                 .signInToMailbox(user.getUsername(), user.getPassword())
-                .startToCreateNewMailUsingHotKeys()
+                .startToCreateNewMailUsingHotKeys(WebDriverSingleton.getWebDriverInstance())
                 .fillInMailAddress(mail.getAddressTo())
                 .fillInMailSubject(mail.getSubject())
                 .fillInMailBody(mail.getBody())

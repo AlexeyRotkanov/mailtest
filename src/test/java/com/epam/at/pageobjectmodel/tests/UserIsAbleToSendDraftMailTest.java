@@ -1,5 +1,7 @@
 package com.epam.at.pageobjectmodel.tests;
 
+import com.epam.at.pageobjectmodel.decorators.CustomDriverDecorator;
+import com.epam.at.pageobjectmodel.drivermanagers.WebDriverSingleton;
 import com.epam.at.pageobjectmodel.objects.Mail;
 import com.epam.at.pageobjectmodel.objects.User;
 import org.openqa.selenium.WebElement;
@@ -17,7 +19,8 @@ public class UserIsAbleToSendDraftMailTest extends InitialTest {
 
         User user = new User(login, password);
 
-        WebElement lastDraftMail = new SignInPage(driver)
+        WebElement lastDraftMail = new SignInPage(new CustomDriverDecorator(WebDriverSingleton
+                .getWebDriverInstance()))
                 .openPage()
                 .signInToMailbox(user.getUsername(), user.getPassword())
                 .startToCreateNewMail()

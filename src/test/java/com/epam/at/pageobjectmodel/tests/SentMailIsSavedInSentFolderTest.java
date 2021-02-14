@@ -1,5 +1,7 @@
 package com.epam.at.pageobjectmodel.tests;
 
+import com.epam.at.pageobjectmodel.decorators.CustomDriverDecorator;
+import com.epam.at.pageobjectmodel.drivermanagers.WebDriverSingleton;
 import com.epam.at.pageobjectmodel.objects.Mail;
 import com.epam.at.pageobjectmodel.objects.User;
 import org.testng.Assert;
@@ -16,7 +18,8 @@ public class SentMailIsSavedInSentFolderTest extends InitialTest {
 
         User user = new User(login, password);
 
-        String lastSentMailText = new SignInPage(driver)
+        String lastSentMailText = new SignInPage(new CustomDriverDecorator(WebDriverSingleton
+                .getWebDriverInstance()))
                 .openPage()
                 .signInToMailbox(user.getUsername(), user.getPassword())
                 .startToCreateNewMail()

@@ -16,10 +16,35 @@ public class Mail {
         body = GenerateDefaultMailData.generateMailBody();
     }
 
-    public Mail(String addressTo, String subject, String body) {
-        this.addressTo = addressTo;
-        this.subject = subject;
-        this.body = body;
+    public Mail(MailBuilder builder) {
+        this.addressTo = builder.addressTo;
+        this.subject = builder.subject;
+        this.body = builder.body;
+    }
+
+    public static class MailBuilder {
+        private String addressTo;
+        private String subject;
+        private String body;
+
+        public MailBuilder(String addressTo) {
+            this.addressTo = addressTo;
+        }
+
+        public MailBuilder withSubject(String subject) {
+            this.subject = subject;
+            return this;
+        }
+
+        public MailBuilder withBody(String body) {
+            this.body = body;
+            return this;
+        }
+
+        public Mail build() {
+            Mail mail = new Mail(this);
+            return mail;
+        }
     }
 
     public String getAddressTo() {

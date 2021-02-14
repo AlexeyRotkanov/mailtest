@@ -1,7 +1,11 @@
 package com.epam.at.pageobjectmodel.tests;
 
+import com.epam.at.pageobjectmodel.decorators.CustomDriverDecorator;
+import com.epam.at.pageobjectmodel.drivermanagers.WebDriverSingleton;
 import com.epam.at.pageobjectmodel.objects.Mail;
 import com.epam.at.pageobjectmodel.objects.User;
+import com.epam.at.pageobjectmodel.tools.ParseMailDataFromWebElement;
+import org.openqa.selenium.WebElement;
 import org.testng.annotations.Test;
 import com.epam.at.pageobjectmodel.pages.SignInPage;
 import com.epam.at.pageobjectmodel.dataproviders.AccountCredentials;
@@ -16,7 +20,8 @@ public class DraftMailIsSavedWithCorrectDataTest extends InitialTest {
 
         User user = new User(login, password);
 
-        String lastDraftMailText = new SignInPage(driver)
+        WebElement lastDraftMail = new SignInPage(new CustomDriverDecorator(WebDriverSingleton
+                .getWebDriverInstance()))
                 .openPage()
                 .signInToMailbox(user.getUsername(), user.getPassword())
                 .startToCreateNewMail()
@@ -26,11 +31,12 @@ public class DraftMailIsSavedWithCorrectDataTest extends InitialTest {
                 .saveMailAsDraft()
                 .closeMailPopup()
                 .openDraftsFolder()
-                .getMailFromListOnPage(mail.getSubject())
-                .getText();
+                .getMailFromListOnPage(mail.getSubject());
 
-        String[] mailData = lastDraftMailText.split(" ");
-        Mail draftMail = new Mail(mailData[0].split("\\R")[0], mailData[0].split("\\R")[1], mailData[1]);
+        Mail draftMail = new Mail.MailBuilder(ParseMailDataFromWebElement.getMailAddressTo(lastDraftMail))
+                .withSubject(ParseMailDataFromWebElement.getMailSubject(lastDraftMail))
+                .withBody(ParseMailDataFromWebElement.getMailBody(lastDraftMail))
+                .build();
 
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertEquals(draftMail.getAddressTo(), mail.getAddressTo(), "Draft mail address is incorrect: ");

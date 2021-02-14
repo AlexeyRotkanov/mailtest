@@ -1,46 +1,33 @@
 package com.epam.at.pageobjectmodel.tests;
 
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.firefox.FirefoxOptions;
-import org.openqa.selenium.remote.RemoteWebDriver;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Optional;
-import org.testng.annotations.Parameters;
-
-import java.net.MalformedURLException;
-import java.net.URL;
+import com.epam.at.pageobjectmodel.decorators.CustomDriverDecorator;
+import com.epam.at.pageobjectmodel.drivermanagers.WebDriverSingleton;
+import com.epam.at.pageobjectmodel.pages.HomePage;
+import org.testng.annotations.*;
 
 public class InitialTest {
 
-    protected WebDriver driver;
+    @BeforeSuite(alwaysRun = true)
+    protected void setUp() {
 
-    @BeforeClass(alwaysRun = true)
-    @Parameters({"browserType", "webdriverHubUrl"})
-    protected void setUp(@Optional("chrome") String browserType,
-                         @Optional("http://localhost:4444/wd/hub") String webdriverHubUrl) {
-
-        try {
-            if (browserType.equals("chrome")) {
-                ChromeOptions chromeOptions = new ChromeOptions();
-                driver = new RemoteWebDriver(new URL(webdriverHubUrl), chromeOptions);
-
-            } else if (browserType.equals("firefox")) {
-                FirefoxOptions firefoxOptions = new FirefoxOptions();
-                driver = new RemoteWebDriver(new URL(webdriverHubUrl), firefoxOptions);
-            }
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        driver.manage().window().maximize();
+        new CustomDriverDecorator(WebDriverSingleton
+                .getWebDriverInstance())
+                .manage()
+                .window()
+                .maximize();
     }
 
     @AfterClass(alwaysRun = true)
+    public void logout() {
+        if (!WebDriverSingleton.getWebDriverInstance().getCurrentUrl().contains("logout"))
+            new HomePage(WebDriverSingleton.getWebDriverInstance()).logout();
+    }
+
+    @AfterSuite(alwaysRun = true)
     protected void tearDown() {
-        if (driver != null) {
-            driver.quit();
-            driver = null;
+        if (WebDriverSingleton.getWebDriverInstance() != null) {
+            new CustomDriverDecorator(WebDriverSingleton
+                    .getWebDriverInstance()).quit();
         }
     }
 }
