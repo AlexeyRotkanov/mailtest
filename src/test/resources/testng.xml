@@ -2,8 +2,6 @@
 
 <suite name = "MailTest">
     <test name = "BasedTests">
-        <parameter name="browserType" value="chrome"/>
-        <parameter name="webDriverHubUrl" value="http://localhost:4444/wd/hub"/>
         <packages>
             <package name="com.epam.at.pageobjectmodel.tests"/>
         </packages>
