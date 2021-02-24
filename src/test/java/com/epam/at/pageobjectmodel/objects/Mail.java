@@ -1,8 +1,8 @@
 package com.epam.at.pageobjectmodel.objects;
-
+import com.epam.at.pageobjectmodel.decorators.MailData;
 import com.epam.at.pageobjectmodel.tools.GenerateDefaultMailData;
 
-public class Mail implements com.epam.at.pageobjectmodel.decorators.MailData {
+public class Mail implements MailData {
 
     private final String MAIL_ADDRESS_TO = "alex.r.epm@gmail.com";
 
