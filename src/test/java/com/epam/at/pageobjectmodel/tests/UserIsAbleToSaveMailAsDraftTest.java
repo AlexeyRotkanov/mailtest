@@ -1,6 +1,8 @@
 package com.epam.at.pageobjectmodel.tests;
 
 import com.epam.at.pageobjectmodel.decorators.CustomDriverDecorator;
+import com.epam.at.pageobjectmodel.decorators.MailData;
+import com.epam.at.pageobjectmodel.decorators.MailDataWithCopy;
 import com.epam.at.pageobjectmodel.drivermanagers.WebDriverSingleton;
 import com.epam.at.pageobjectmodel.objects.Mail;
 import com.epam.at.pageobjectmodel.objects.User;
@@ -12,27 +14,29 @@ import com.epam.at.pageobjectmodel.dataproviders.AccountCredentials;
 
 public class UserIsAbleToSaveMailAsDraftTest extends InitialTest {
 
-    private Mail mail = new Mail();
+    private MailData mail = new Mail();
 
     @Test(dataProviderClass = AccountCredentials.class, dataProvider = "accountCredentials")
     public void saveMailAsDraftTest(String login, String password) {
 
         User user = new User(login, password);
+        mail = new MailDataWithCopy(mail, "distest@mail.ru");
+        mail.writeMail();
 
         WebElement lastMail = new SignInPage(new CustomDriverDecorator(WebDriverSingleton
                 .getWebDriverInstance()))
                 .openPage()
                 .signInToMailbox(user.getUsername(), user.getPassword())
                 .startToCreateNewMail()
-                .fillInMailAddress(mail.getAddressTo())
-                .fillInMailSubject(mail.getSubject())
-                .fillInMailBody(mail.getBody())
+                .fillInMailAddress(mail.getMailAddress())
+                .fillInMailSubject(mail.getMailSubject())
+                .fillInMailBody(mail.getMailBody())
                 .saveMailAsDraft()
                 .closeMailPopup()
                 .openDraftsFolder()
-                .getMailFromListOnPage(mail.getSubject());
+                .getMailFromListOnPage(mail.getMailSubject());
 
-        Assert.assertTrue(lastMail.getText().contains(mail.getSubject()), "Subject of mail does not contains test text, " +
+        Assert.assertTrue(lastMail.getText().contains(mail.getMailSubject()), "Subject of mail does not contains test text, " +
                 "probably mail was not saved");
     }
 }

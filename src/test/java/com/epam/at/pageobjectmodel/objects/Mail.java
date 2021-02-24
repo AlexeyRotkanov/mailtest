@@ -2,7 +2,7 @@ package com.epam.at.pageobjectmodel.objects;
 
 import com.epam.at.pageobjectmodel.tools.GenerateDefaultMailData;
 
-public class Mail {
+public class Mail implements com.epam.at.pageobjectmodel.decorators.MailData {
 
     private final String MAIL_ADDRESS_TO = "alex.r.epm@gmail.com";
 
@@ -20,6 +20,23 @@ public class Mail {
         this.addressTo = builder.addressTo;
         this.subject = builder.subject;
         this.body = builder.body;
+    }
+
+    public String getMailAddress() {
+        return addressTo;
+    }
+
+    public String getMailSubject() {
+        return subject;
+    }
+
+    public String getMailBody() {
+        return body;
+    }
+
+    public void writeMail() {
+        System.out.println(String.format("Create a mail with 'Address to': %s; 'Subject': %s, 'Body': %s",
+                addressTo, subject, body));
     }
 
     public static class MailBuilder {

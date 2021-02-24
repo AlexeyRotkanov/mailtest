@@ -20,7 +20,7 @@ public class DraftMailIsSavedWithCorrectDataTest extends InitialTest {
 
         User user = new User(login, password);
 
-        WebElement lastDraftMail = new SignInPage(new CustomDriverDecorator(WebDriverSingleton
+        String lastDraftMailData = new SignInPage(new CustomDriverDecorator(WebDriverSingleton
                 .getWebDriverInstance()))
                 .openPage()
                 .signInToMailbox(user.getUsername(), user.getPassword())
@@ -31,11 +31,12 @@ public class DraftMailIsSavedWithCorrectDataTest extends InitialTest {
                 .saveMailAsDraft()
                 .closeMailPopup()
                 .openDraftsFolder()
-                .getMailFromListOnPage(mail.getSubject());
+                .getMailFromListOnPage(mail.getSubject())
+                .getText();
 
-        Mail draftMail = new Mail.MailBuilder(ParseMailDataFromWebElement.getMailAddressTo(lastDraftMail))
-                .withSubject(ParseMailDataFromWebElement.getMailSubject(lastDraftMail))
-                .withBody(ParseMailDataFromWebElement.getMailBody(lastDraftMail))
+        Mail draftMail = new Mail.MailBuilder(ParseMailDataFromWebElement.getMailAddressTo(lastDraftMailData))
+                .withSubject(ParseMailDataFromWebElement.getMailSubject(lastDraftMailData))
+                .withBody(ParseMailDataFromWebElement.getMailBody(lastDraftMailData))
                 .build();
 
         SoftAssert softAssert = new SoftAssert();
