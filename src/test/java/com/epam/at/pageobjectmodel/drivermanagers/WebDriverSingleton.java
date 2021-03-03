@@ -26,8 +26,10 @@ public class WebDriverSingleton {
 
                 if (browserType.equals("chrome")) {
                     driver = new ChromeDriverCreator().createRemoteWebDriver(webDriverHubUrl);
+                    driver.manage().window().maximize();
                 } else if (browserType.equals("firefox")) {
                     driver = new FirefoxDriverCreator().createRemoteWebDriver(webDriverHubUrl);
+                    driver.manage().window().maximize();
                 }
 
             } catch (MalformedURLException e) {

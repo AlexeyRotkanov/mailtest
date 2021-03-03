@@ -28,7 +28,7 @@ public class EmailPopupPage extends HomePage {
     @FindBy(xpath = "//*[@role='textbox']")
     private WebElement mailBodyField;
 
-    protected EmailPopupPage(WebDriver driver) {
+    public EmailPopupPage(WebDriver driver) {
         super(driver);
     }
 
