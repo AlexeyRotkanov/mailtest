@@ -7,4 +7,8 @@ public abstract class AdvancedMailData implements MailData {
     public AdvancedMailData(MailData mail) {
         this.mail = mail;
     }
+
+    public String getMailSubject() {
+        return mail.getMailSubject();
+    }
 }

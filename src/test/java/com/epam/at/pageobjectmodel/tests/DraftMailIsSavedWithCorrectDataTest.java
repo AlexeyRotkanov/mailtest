@@ -1,6 +1,8 @@
 package com.epam.at.pageobjectmodel.tests;
 
 import com.epam.at.pageobjectmodel.decorators.CustomDriverDecorator;
+import com.epam.at.pageobjectmodel.decorators.MailData;
+import com.epam.at.pageobjectmodel.decorators.MailDataWithPrefix;
 import com.epam.at.pageobjectmodel.drivermanagers.WebDriverSingleton;
 import com.epam.at.pageobjectmodel.objects.Mail;
 import com.epam.at.pageobjectmodel.objects.User;
@@ -13,10 +15,12 @@ import org.testng.asserts.SoftAssert;
 
 public class DraftMailIsSavedWithCorrectDataTest extends InitialTest {
 
-    private Mail mail = new Mail();
+    private MailData mail = new Mail();
 
     @Test(dataProviderClass = AccountCredentials.class, dataProvider = "accountCredentials")
     public void checkDraftMailDataTest(String login, String password) {
+
+        mail = new MailDataWithPrefix(mail);
 
         User user = new User(login, password);
 
@@ -25,13 +29,13 @@ public class DraftMailIsSavedWithCorrectDataTest extends InitialTest {
                 .openPage()
                 .signInToMailbox(user.getUsername(), user.getPassword())
                 .startToCreateNewMail()
-                .fillInMailAddress(mail.getAddressTo())
-                .fillInMailSubject(mail.getSubject())
-                .fillInMailBody(mail.getBody())
+                .fillInMailAddress(mail.getMailAddress())
+                .fillInMailSubject(mail.getMailSubject())
+                .fillInMailBody(mail.getMailBody())
                 .saveMailAsDraft()
                 .closeMailPopup()
                 .openDraftsFolder()
-                .getMailFromListOnPage(mail.getSubject())
+                .getMailFromListOnPage(mail.getMailSubject())
                 .getText();
 
         Mail draftMail = new Mail.MailBuilder(ParseMailDataFromWebElement.getMailAddressTo(lastDraftMailData))
@@ -40,9 +44,9 @@ public class DraftMailIsSavedWithCorrectDataTest extends InitialTest {
                 .build();
 
         SoftAssert softAssert = new SoftAssert();
-        softAssert.assertEquals(draftMail.getAddressTo(), mail.getAddressTo(), "Draft mail address is incorrect: ");
-        softAssert.assertEquals(draftMail.getSubject(), mail.getSubject(), "Draft mail subject is incorrect: ");
-        softAssert.assertEquals(draftMail.getBody(), mail.getBody(), "Draft mail body is incorrect: ");
+        softAssert.assertEquals(draftMail.getAddressTo(), mail.getMailAddress(), "Draft mail address is incorrect: ");
+        softAssert.assertEquals(draftMail.getSubject(), mail.getMailSubject(), "Draft mail subject is incorrect: ");
+        softAssert.assertEquals(draftMail.getBody(), mail.getMailBody(), "Draft mail body is incorrect: ");
         softAssert.assertAll();
     }
 }
