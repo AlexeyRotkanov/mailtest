@@ -17,6 +17,8 @@ public class WebDriverSingleton {
 
     public static WebDriver getWebDriverInstance() {
 
+        WebDriverCreator driverCreator = null;
+
         if (driver == null) {
 
             try {
@@ -25,10 +27,13 @@ public class WebDriverSingleton {
                 String webDriverHubUrl = GetProperties.getPropertyValueByName("webDriverHubUrl");
 
                 if (browserType.equals("chrome")) {
-                    driver = new ChromeDriverCreator().createRemoteWebDriver(webDriverHubUrl);
-                    driver.manage().window().maximize();
+                    driverCreator = new ChromeDriverCreator();
                 } else if (browserType.equals("firefox")) {
-                    driver = new FirefoxDriverCreator().createRemoteWebDriver(webDriverHubUrl);
+                    driverCreator = new FirefoxDriverCreator();
+                }
+
+                if (driverCreator != null) {
+                    driver = driverCreator.createRemoteWebDriver(webDriverHubUrl);
                     driver.manage().window().maximize();
                 }
 
