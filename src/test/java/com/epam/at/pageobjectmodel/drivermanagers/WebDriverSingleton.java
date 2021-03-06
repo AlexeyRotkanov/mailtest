@@ -1,5 +1,6 @@
 package com.epam.at.pageobjectmodel.drivermanagers;
 
+import com.epam.at.pageobjectmodel.reporting.MailLogger;
 import com.epam.at.pageobjectmodel.tools.GetProperties;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
@@ -38,15 +39,13 @@ public class WebDriverSingleton {
                 }
 
             } catch (MalformedURLException e) {
-                System.out.println("Malformed URL has occurred or could not be parsed. " +
+                MailLogger.fatal("Malformed URL has occurred or could not be parsed. " +
                         "Current webDriverHubUrl in config.properties = " +
-                        GetProperties.getPropertyValueByName("webDriverHubUrl"));
-                e.printStackTrace();
+                        GetProperties.getPropertyValueByName("webDriverHubUrl"), e);
             } catch (WebDriverException e) {
-                System.out.println("Probably incorrect webDriverHubUrl is configured. " +
+                MailLogger.fatal("Probably incorrect webDriverHubUrl is configured. " +
                         "Current webDriverHubUrl in config.properties = " +
-                        GetProperties.getPropertyValueByName("webDriverHubUrl"));
-                e.printStackTrace();
+                        GetProperties.getPropertyValueByName("webDriverHubUrl"), e);
             }
         }
         return driver;

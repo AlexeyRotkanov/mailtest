@@ -1,5 +1,6 @@
 package com.epam.at.pageobjectmodel.decorators;
 
+import com.epam.at.pageobjectmodel.reporting.MailLogger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -17,12 +18,12 @@ public class CustomDriverDecorator implements WebDriver, JavascriptExecutor {
     }
 
     public void get(String url) {
-        System.out.println(String.format("Opening URL: %s", url));
+        MailLogger.debug(String.format("Opening URL: %s", url));
         driver.get(url);
     }
 
     public String getCurrentUrl() {
-        System.out.println(String.format("Getting current URL: %s", driver.getCurrentUrl()));
+        MailLogger.debug(String.format("Getting current URL: %s", driver.getCurrentUrl()));
         return driver.getCurrentUrl();
     }
 
@@ -31,12 +32,12 @@ public class CustomDriverDecorator implements WebDriver, JavascriptExecutor {
     }
 
     public List<WebElement> findElements(By by) {
-        System.out.println(String.format("Finding elements: %s; page URL: %s", by, driver.getCurrentUrl()));
+        MailLogger.debug(String.format("Finding elements: %s; page URL: %s", by, driver.getCurrentUrl()));
         return driver.findElements(by);
     }
 
     public WebElement findElement(By by) {
-        System.out.println(String.format("Finding an element: %s; page URL: %s", by, driver.getCurrentUrl()));
+        MailLogger.debug(String.format("Finding an element: %s; page URL: %s", by, driver.getCurrentUrl()));
         return driver.findElement(by);
     }
 
@@ -49,7 +50,7 @@ public class CustomDriverDecorator implements WebDriver, JavascriptExecutor {
     }
 
     public void quit() {
-        System.out.println("Closing the browser");
+        MailLogger.debug("Closing the browser");
         driver.quit();
     }
 
@@ -70,17 +71,16 @@ public class CustomDriverDecorator implements WebDriver, JavascriptExecutor {
     }
 
     public Options manage() {
-        System.out.println("Managing the driver");
         return driver.manage();
     }
 
     public Object executeScript(String s, Object... objects) {
-        System.out.println(String.format("Execute script: %s", s));
+        MailLogger.debug(String.format("Execute script: %s", s));
         return ((JavascriptExecutor) driver).executeScript(s, objects);
     }
 
     public Object executeAsyncScript(String s, Object... objects) {
-        System.out.println(String.format("Execute script: %s", s));
+        MailLogger.debug(String.format("Execute script: %s", s));
         return ((JavascriptExecutor) driver).executeAsyncScript(s, objects);
     }
 }

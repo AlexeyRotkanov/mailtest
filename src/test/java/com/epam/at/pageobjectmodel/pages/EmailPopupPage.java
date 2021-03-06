@@ -1,5 +1,7 @@
 package com.epam.at.pageobjectmodel.pages;
 
+import com.epam.at.pageobjectmodel.reporting.MailLogger;
+import com.epam.at.pageobjectmodel.tools.HighlightElement;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -33,27 +35,37 @@ public class EmailPopupPage extends HomePage {
     }
 
     public EmailPopupPage fillInMailAddress(String mailAddress) {
+        MailLogger.info("Filling mail data: mail address = " + mailAddress);
+        HighlightElement.highlightElement(driver, new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
+                .until(ExpectedConditions.visibilityOf(mailAddressField)));
         new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
                 .until(ExpectedConditions.visibilityOf(mailAddressField)).sendKeys(mailAddress);
         return this;
     }
 
     public EmailPopupPage fillInMailSubject(String mailSubject) {
+        MailLogger.info("Filling mail data: mail address = " + mailSubject);
+        HighlightElement.highlightElement(driver, mailSubjectField);
         mailSubjectField.sendKeys(mailSubject);
         return this;
     }
 
     public EmailPopupPage fillInMailBody(String mailBody) {
+        MailLogger.info("Filling mail data: mail address = " + mailBody);
+        HighlightElement.highlightElement(driver, mailBodyField);
         mailBodyField.sendKeys(mailBody);
         return this;
     }
 
     public EmailPopupPage saveMailAsDraft() {
+        MailLogger.debug("Saving mail as draft");
+        HighlightElement.highlightElement(driver, saveDraftButton);
         saveDraftButton.click();
         return this;
     }
 
     public EmailPopupPage saveMailAsDraftUsingHotKeys() {
+        MailLogger.debug("Saving mail as draft using hotkeys");
         Actions action = new Actions(driver);
         action.keyDown(Keys.CONTROL).sendKeys("s").build().perform();
         action.keyUp(Keys.CONTROL).build().perform();
@@ -61,11 +73,16 @@ public class EmailPopupPage extends HomePage {
     }
 
     public HomePage closeMailPopup() {
+        MailLogger.debug("Closing draft mail pop-up");
+        HighlightElement.highlightElement(driver, closeMailButton);
         closeMailButton.click();
         return new HomePage(driver);
     }
 
     public SentPopupPage sendDraftMail() {
+        MailLogger.debug("Sending draft mail");
+        HighlightElement.highlightElement(driver, new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
+                .until(ExpectedConditions.visibilityOf(sendDraftButton)));
         new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
                 .until(ExpectedConditions.visibilityOf(sendDraftButton)).click();
         return new SentPopupPage(driver);

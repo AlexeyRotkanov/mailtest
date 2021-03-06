@@ -7,7 +7,6 @@ import com.epam.at.pageobjectmodel.drivermanagers.WebDriverSingleton;
 import com.epam.at.pageobjectmodel.objects.Mail;
 import com.epam.at.pageobjectmodel.objects.User;
 import com.epam.at.pageobjectmodel.tools.ParseMailDataFromWebElement;
-import org.openqa.selenium.WebElement;
 import org.testng.annotations.Test;
 import com.epam.at.pageobjectmodel.pages.SignInPage;
 import com.epam.at.pageobjectmodel.dataproviders.AccountCredentials;
