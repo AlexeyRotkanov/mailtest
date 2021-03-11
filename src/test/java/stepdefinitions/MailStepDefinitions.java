@@ -6,12 +6,11 @@ import com.epam.at.pageobjectmodel.drivermanagers.WebDriverSingleton;
 import com.epam.at.pageobjectmodel.objects.Mail;
 import com.epam.at.pageobjectmodel.pages.EmailPopupPage;
 import com.epam.at.pageobjectmodel.pages.HomePage;
-import com.epam.at.pageobjectmodel.pages.SignInPage;
 import com.epam.at.pageobjectmodel.tools.ParseMailDataFromWebElement;
-import cucumber.api.java.en.And;
-import cucumber.api.java.en.Given;
-import cucumber.api.java.en.Then;
-import cucumber.api.java.en.When;
+import io.cucumber.java.en.And;
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 import org.testng.Assert;
 import org.testng.asserts.SoftAssert;
 
