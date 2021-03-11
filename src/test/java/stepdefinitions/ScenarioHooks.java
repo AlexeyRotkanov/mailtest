@@ -2,7 +2,7 @@ package stepdefinitions;
 
 import com.epam.at.pageobjectmodel.drivermanagers.WebDriverSingleton;
 import com.epam.at.pageobjectmodel.pages.HomePage;
-import cucumber.api.java.After;
+import io.cucumber.java.After;
 
 
 public class ScenarioHooks {

@@ -6,12 +6,11 @@ import com.epam.at.pageobjectmodel.drivermanagers.WebDriverSingleton;
 import com.epam.at.pageobjectmodel.objects.Mail;
 import com.epam.at.pageobjectmodel.pages.EmailPopupPage;
 import com.epam.at.pageobjectmodel.pages.HomePage;
-import com.epam.at.pageobjectmodel.pages.SignInPage;
 import com.epam.at.pageobjectmodel.tools.ParseMailDataFromWebElement;
-import cucumber.api.java.en.And;
-import cucumber.api.java.en.Given;
-import cucumber.api.java.en.Then;
-import cucumber.api.java.en.When;
+import io.cucumber.java.en.And;
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 import org.testng.Assert;
 import org.testng.asserts.SoftAssert;
 
@@ -93,16 +92,16 @@ public class MailStepDefinitions {
     @When("I delete draft mail using (?:[dD]rag.*[dD]rop)$")
     public void iDeleteDraftMailUsingDragNDrop() {
         System.out.println("START TO DRAG N DROP");
-        new HomePage(new CustomDriverDecorator(WebDriverSingleton
-                .getWebDriverInstance()))
+        new HomePage(WebDriverSingleton
+                .getWebDriverInstance())
                 .deleteDraftMailUsingDragNDrop(mail.getMailSubject());
     }
 
     @When("I delete draft mail using (?:[cC]ontext.*[mM]enu)$")
     public void iDeleteDraftMailUsingContextMenu() {
         System.out.println("START TO DELETE USING CONTEXT MENU");
-        new HomePage(new CustomDriverDecorator(WebDriverSingleton
-                .getWebDriverInstance()))
+        new HomePage(WebDriverSingleton
+                .getWebDriverInstance())
                 .deleteMailUsingContextMenu(mail.getMailSubject());
     }
 
