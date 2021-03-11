@@ -92,16 +92,16 @@ public class MailStepDefinitions {
     @When("I delete draft mail using (?:[dD]rag.*[dD]rop)$")
     public void iDeleteDraftMailUsingDragNDrop() {
         System.out.println("START TO DRAG N DROP");
-        new HomePage(new CustomDriverDecorator(WebDriverSingleton
-                .getWebDriverInstance()))
+        new HomePage(WebDriverSingleton
+                .getWebDriverInstance())
                 .deleteDraftMailUsingDragNDrop(mail.getMailSubject());
     }
 
     @When("I delete draft mail using (?:[cC]ontext.*[mM]enu)$")
     public void iDeleteDraftMailUsingContextMenu() {
         System.out.println("START TO DELETE USING CONTEXT MENU");
-        new HomePage(new CustomDriverDecorator(WebDriverSingleton
-                .getWebDriverInstance()))
+        new HomePage(WebDriverSingleton
+                .getWebDriverInstance())
                 .deleteMailUsingContextMenu(mail.getMailSubject());
     }
 
