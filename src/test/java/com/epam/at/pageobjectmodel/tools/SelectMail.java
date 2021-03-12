@@ -14,9 +14,10 @@ public class SelectMail {
         for (WebElement element : listOfMails) {
             if (element.getText().contains(mailSubject))
                 mail = element;
-            else
-                MailLogger.warn("No mail selected! The mail list has not yet been loaded or the mail does not exist.");
         }
+
+        if (mail==null)
+            MailLogger.warn("No mail selected! The mail list has not yet been loaded or the mail does not exist.");
 
         return mail;
     }

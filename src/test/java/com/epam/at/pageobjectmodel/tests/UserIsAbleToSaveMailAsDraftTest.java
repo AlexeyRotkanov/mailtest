@@ -2,7 +2,6 @@ package com.epam.at.pageobjectmodel.tests;
 
 import com.epam.at.pageobjectmodel.decorators.CustomDriverDecorator;
 import com.epam.at.pageobjectmodel.decorators.MailData;
-import com.epam.at.pageobjectmodel.decorators.MailDataWithCopy;
 import com.epam.at.pageobjectmodel.drivermanagers.WebDriverSingleton;
 import com.epam.at.pageobjectmodel.objects.Mail;
 import com.epam.at.pageobjectmodel.objects.User;
@@ -20,8 +19,6 @@ public class UserIsAbleToSaveMailAsDraftTest extends InitialTest {
     public void saveMailAsDraftTest(String login, String password) {
 
         User user = new User(login, password);
-        mail = new MailDataWithCopy(mail, "distest@mail.ru");
-        mail.writeMail();
 
         WebElement lastMail = new SignInPage(new CustomDriverDecorator(WebDriverSingleton
                 .getWebDriverInstance()))

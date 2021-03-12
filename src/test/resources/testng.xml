@@ -6,9 +6,4 @@
             <package name="com.epam.at.pageobjectmodel.tests"/>
         </packages>
     </test>
-<!--    <test name = "MailTestsViaCucumberAndTestNG">-->
-<!--        <classes>-->
-<!--            <class name="com.epam.at.pageobjectmodel.runners.CucumberTestRunner"/>-->
-<!--        </classes>-->
-<!--    </test>-->
 </suite>
