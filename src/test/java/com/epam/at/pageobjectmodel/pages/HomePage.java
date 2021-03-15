@@ -1,7 +1,5 @@
 package com.epam.at.pageobjectmodel.pages;
 
-import com.epam.at.pageobjectmodel.conditions.CustomConditions;
-
 import com.epam.at.pageobjectmodel.reporting.MailLogger;
 import com.epam.at.pageobjectmodel.tools.Delay;
 import com.epam.at.pageobjectmodel.tools.HighlightElement;
@@ -86,9 +84,6 @@ public class HomePage extends AbstractPage {
         HighlightElement.highlightElement(driver, draftsFolder);
         draftsFolder.click();
 
-        new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
-                .until(CustomConditions.jQueryAjaxCompleted());
-
         return this;
     }
 
@@ -96,9 +91,6 @@ public class HomePage extends AbstractPage {
         MailLogger.debug("Opening 'Sent' folder");
         HighlightElement.highlightElement(driver, sendFolder);
         sendFolder.click();
-
-        new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
-                .until(CustomConditions.jQueryAjaxCompleted());
 
         return this;
     }
@@ -109,8 +101,6 @@ public class HomePage extends AbstractPage {
                 .until(ExpectedConditions.visibilityOf(trashFolder)));
         new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
                 .until(ExpectedConditions.visibilityOf(trashFolder)).click();
-        new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
-                .until(CustomConditions.jQueryAjaxCompleted());
 
         return this;
     }
@@ -135,9 +125,6 @@ public class HomePage extends AbstractPage {
         HighlightElement.highlightElement(driver, trashFolder);
 
         new Actions(driver).dragAndDrop(draftMail, trashFolder).build().perform();
-
-        new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
-                .until(CustomConditions.jQueryAjaxCompleted());
 
         return this;
     }
@@ -176,6 +163,11 @@ public class HomePage extends AbstractPage {
         HighlightElement.highlightElement(driver, logoutLink);
         logoutLink.click();
         return new SignInPage(driver);
+    }
+
+    public Boolean isUserLoggedIn() {
+        return new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
+                .until(ExpectedConditions.not(ExpectedConditions.invisibilityOf(logoutLink)));
     }
 
     public ReloginPage newLogout() {

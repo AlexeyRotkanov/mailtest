@@ -43,8 +43,8 @@ public class SignInPage extends AbstractPage {
         HighlightElement.highlightElement(driver, signInButton);
         signInButton.click();
 
-        new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
-                .until(CustomConditions.jQueryAjaxCompleted());
+//        new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
+//                .until(CustomConditions.jQueryAjaxCompleted());
 
         return new HomePage(driver);
     }

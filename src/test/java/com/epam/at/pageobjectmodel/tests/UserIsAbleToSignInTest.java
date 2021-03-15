@@ -15,12 +15,12 @@ public class UserIsAbleToSignInTest extends InitialTest {
 
         User user = new User(login, password);
 
-        new SignInPage(new CustomDriverDecorator(WebDriverSingleton
+        boolean isUserLoggedIn = new SignInPage(new CustomDriverDecorator(WebDriverSingleton
                 .getWebDriverInstance()))
                 .openPage()
-                .signInToMailbox(user.getUsername(), user.getPassword());
+                .signInToMailbox(user.getUsername(), user.getPassword())
+                .isUserLoggedIn();
 
-        boolean isUserSignedIn = WebDriverSingleton.getWebDriverInstance().getCurrentUrl().contains("inbox");
-        Assert.assertTrue(isUserSignedIn, "User is not in inbox, check that user is signed in");
+        Assert.assertTrue(isUserLoggedIn, "User is not in inbox, check that user is signed in");
     }
 }
