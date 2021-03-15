@@ -28,8 +28,8 @@ public class AuthorizationStepDefinitions {
 
     @Then("^I am logged in$")
     public void iAmLoggedIn() {
-        boolean isUserSignedIn = WebDriverSingleton.getWebDriverInstance().getCurrentUrl().contains("inbox");
-        Assert.assertTrue(isUserSignedIn, "User is not in inbox, check that user is signed in");
+        Assert.assertTrue(new HomePage(new CustomDriverDecorator(WebDriverSingleton
+                .getWebDriverInstance())).isUserLoggedIn(), "User is not in inbox, check that user is signed in");
     }
 
     @When("^I logged out$")

@@ -1,7 +1,5 @@
 package com.epam.at.pageobjectmodel.pages;
 
-import com.epam.at.pageobjectmodel.conditions.CustomConditions;
-
 import com.epam.at.pageobjectmodel.tools.Delay;
 import com.epam.at.pageobjectmodel.tools.MarkMail;
 import com.epam.at.pageobjectmodel.tools.SelectMail;
@@ -70,17 +68,11 @@ public class HomePage extends AbstractPage {
     public HomePage openDraftsFolder() {
         draftsFolder.click();
 
-        new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
-                .until(CustomConditions.jQueryAjaxCompleted());
-
         return this;
     }
 
     public HomePage openSentFolder() {
         sendFolder.click();
-
-        new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
-                .until(CustomConditions.jQueryAjaxCompleted());
 
         return this;
     }
@@ -89,8 +81,6 @@ public class HomePage extends AbstractPage {
 
         new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
                 .until(ExpectedConditions.visibilityOf(trashFolder)).click();
-        new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
-                .until(CustomConditions.jQueryAjaxCompleted());
 
         return this;
     }
@@ -109,9 +99,6 @@ public class HomePage extends AbstractPage {
         WebElement draftMail = markMailBySubjectInList(mailSubject, draftMailEntries);
 
         new Actions(driver).dragAndDrop(draftMail, trashFolder).build().perform();
-
-        new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
-                .until(CustomConditions.jQueryAjaxCompleted());
 
         return this;
     }
@@ -145,7 +132,13 @@ public class HomePage extends AbstractPage {
     }
 
     public SignInPage logout() {
-        logoutLink.click();
+        new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
+                .until(ExpectedConditions.elementToBeClickable(logoutLink)).click();
         return new SignInPage(driver);
+    }
+
+    public Boolean isUserLoggedIn() {
+        return new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
+                .until(ExpectedConditions.not(ExpectedConditions.invisibilityOf(logoutLink)));
     }
 }

@@ -38,9 +38,6 @@ public class SignInPage extends AbstractPage {
         fillInPassword(password);
         signInButton.click();
 
-        new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
-                .until(CustomConditions.jQueryAjaxCompleted());
-
         return new HomePage(driver);
     }
 
