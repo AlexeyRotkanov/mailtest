@@ -10,7 +10,7 @@ public class HighlightElement {
         String defaultBackground = element.getCssValue("backgroundColor");
         JavascriptExecutor js = ((JavascriptExecutor) driver);
         js.executeScript("arguments[0].style.backgroundColor = '" + "yellow" + "'", element);
-//        Screenshot.takeScreenshot(driver);
-//        js.executeScript("arguments[0].style.backgroundColor = '" + defaultBackground + "'", element);
+        Screenshot.takeScreenshot(driver);
+        js.executeScript("arguments[0].style.backgroundColor = '" + defaultBackground + "'", element);
     }
 }

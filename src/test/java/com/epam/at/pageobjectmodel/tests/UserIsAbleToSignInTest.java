@@ -15,8 +15,8 @@ public class UserIsAbleToSignInTest extends InitialTest {
 
         User user = new User(login, password);
 
-        boolean isUserLoggedIn = new SignInPage(new CustomDriverDecorator(WebDriverSingleton
-                .getWebDriverInstance()))
+        boolean isUserLoggedIn = new SignInPage(WebDriverSingleton
+                .getWebDriverInstance())
                 .openPage()
                 .signInToMailbox(user.getUsername(), user.getPassword())
                 .isUserLoggedIn();
