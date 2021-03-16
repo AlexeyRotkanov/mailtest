@@ -1,6 +1,6 @@
 package com.epam.at.pageobjectmodel.pages;
 
-import com.epam.at.pageobjectmodel.conditions.CustomConditions;
+import com.epam.at.pageobjectmodel.drivermanagers.WebDriverSingleton;
 import com.epam.at.pageobjectmodel.reporting.MailLogger;
 import com.epam.at.pageobjectmodel.tools.HighlightElement;
 import org.openqa.selenium.WebDriver;
@@ -40,17 +40,14 @@ public class SignInPage extends AbstractPage {
 
         fillInLogin(login);
         fillInPassword(password);
-        HighlightElement.highlightElement(driver, signInButton);
+        HighlightElement.highlightElement(WebDriverSingleton.getWebDriverInstance(), signInButton);
         signInButton.click();
-
-//        new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
-//                .until(CustomConditions.jQueryAjaxCompleted());
 
         return new HomePage(driver);
     }
 
     private SignInPage fillInPassword(String password) {
-        HighlightElement.highlightElement(driver, new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
+        HighlightElement.highlightElement(WebDriverSingleton.getWebDriverInstance(), new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
                 .until(ExpectedConditions.visibilityOf(passwordInputField)));
         new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
                 .until(ExpectedConditions.visibilityOf(passwordInputField)).sendKeys(password);
@@ -58,7 +55,7 @@ public class SignInPage extends AbstractPage {
     }
 
     private SignInPage fillInLogin(String login) {
-        HighlightElement.highlightElement(driver, new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
+        HighlightElement.highlightElement(WebDriverSingleton.getWebDriverInstance(), new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
                 .until(ExpectedConditions.visibilityOf(loginInputField)));
         new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
                 .until(ExpectedConditions.visibilityOf(loginInputField)).sendKeys(login);

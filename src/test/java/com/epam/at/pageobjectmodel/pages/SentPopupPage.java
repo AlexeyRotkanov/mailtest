@@ -1,5 +1,6 @@
 package com.epam.at.pageobjectmodel.pages;
 
+import com.epam.at.pageobjectmodel.drivermanagers.WebDriverSingleton;
 import com.epam.at.pageobjectmodel.reporting.MailLogger;
 import com.epam.at.pageobjectmodel.tools.HighlightElement;
 import org.openqa.selenium.WebDriver;
@@ -19,7 +20,7 @@ public class SentPopupPage extends HomePage {
 
     public HomePage closeSentMailPopup() {
         MailLogger.debug("Closing 'Sent Mail' pop-up");
-        HighlightElement.highlightElement(driver, new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
+        HighlightElement.highlightElement(WebDriverSingleton.getWebDriverInstance(), new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
                 .until(ExpectedConditions.elementToBeClickable(closeSendPopupButton)));
         new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
                 .until(ExpectedConditions.elementToBeClickable(closeSendPopupButton)).click();

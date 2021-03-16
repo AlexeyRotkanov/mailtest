@@ -1,5 +1,6 @@
 package com.epam.at.pageobjectmodel.pages;
 
+import com.epam.at.pageobjectmodel.drivermanagers.WebDriverSingleton;
 import com.epam.at.pageobjectmodel.reporting.MailLogger;
 import com.epam.at.pageobjectmodel.tools.Delay;
 import com.epam.at.pageobjectmodel.tools.HighlightElement;
@@ -62,7 +63,7 @@ public class HomePage extends AbstractPage {
 
     public EmailPopupPage startToCreateNewMail() {
         MailLogger.debug("Starting to create new mail");
-        HighlightElement.highlightElement(driver, new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
+        HighlightElement.highlightElement(WebDriverSingleton.getWebDriverInstance(), new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
                 .until(ExpectedConditions.visibilityOf(createNewLetterButton)));
         new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
                 .until(ExpectedConditions.visibilityOf(createNewLetterButton)).click();
@@ -71,7 +72,7 @@ public class HomePage extends AbstractPage {
 
     public EmailPopupPage startToCreateNewMailUsingHotKeys(WebDriver driver) {
         MailLogger.debug("Starting to create new mail using hotkeys");
-        HighlightElement.highlightElement(driver, new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
+        HighlightElement.highlightElement(WebDriverSingleton.getWebDriverInstance(), new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
                 .until(ExpectedConditions.visibilityOf(createNewLetterButton)));
         new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
                 .until(ExpectedConditions.visibilityOf(createNewLetterButton));
@@ -81,7 +82,7 @@ public class HomePage extends AbstractPage {
 
     public HomePage openDraftsFolder() {
         MailLogger.debug("Opening 'Draft' folder");
-        HighlightElement.highlightElement(driver, draftsFolder);
+        HighlightElement.highlightElement(WebDriverSingleton.getWebDriverInstance(), draftsFolder);
         draftsFolder.click();
 
         return this;
@@ -89,7 +90,7 @@ public class HomePage extends AbstractPage {
 
     public HomePage openSentFolder() {
         MailLogger.debug("Opening 'Sent' folder");
-        HighlightElement.highlightElement(driver, sendFolder);
+        HighlightElement.highlightElement(WebDriverSingleton.getWebDriverInstance(), sendFolder);
         sendFolder.click();
 
         return this;
@@ -97,7 +98,7 @@ public class HomePage extends AbstractPage {
 
     public HomePage openTrashFolder() {
         MailLogger.debug("Opening 'Trash' folder");
-        HighlightElement.highlightElement(driver, new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
+        HighlightElement.highlightElement(WebDriverSingleton.getWebDriverInstance(), new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
                 .until(ExpectedConditions.visibilityOf(trashFolder)));
         new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
                 .until(ExpectedConditions.visibilityOf(trashFolder)).click();
@@ -112,7 +113,7 @@ public class HomePage extends AbstractPage {
 
     public EmailPopupPage openMailFromListOnPage(String mailSubject) {
         MailLogger.info("Opening the mail with subject [" + mailSubject + "] from the list");
-        HighlightElement.highlightElement(driver, SelectMail.selectMailBySubject(mailSubject, draftMailEntries));
+        HighlightElement.highlightElement(WebDriverSingleton.getWebDriverInstance(), SelectMail.selectMailBySubject(mailSubject, draftMailEntries));
         SelectMail.selectMailBySubject(mailSubject, draftMailEntries).click();
         return new EmailPopupPage(driver);
     }
@@ -121,8 +122,8 @@ public class HomePage extends AbstractPage {
         MailLogger.info("Deleting the mail with subject [" + mailSubject + "] using Drag And Drop");
 
         WebElement draftMail = markMailBySubjectInList(mailSubject, draftMailEntries);
-        HighlightElement.highlightElement(driver, draftMail);
-        HighlightElement.highlightElement(driver, trashFolder);
+        HighlightElement.highlightElement(WebDriverSingleton.getWebDriverInstance(), draftMail);
+        HighlightElement.highlightElement(WebDriverSingleton.getWebDriverInstance(), trashFolder);
 
         new Actions(driver).dragAndDrop(draftMail, trashFolder).build().perform();
 
@@ -133,7 +134,7 @@ public class HomePage extends AbstractPage {
         MailLogger.info("Deleting the mail with subject [" + mailSubject + "] using context menu");
 
         WebElement mail = SelectMail.selectMailBySubject(mailSubject, draftMailEntries);
-        HighlightElement.highlightElement(driver, mail);
+        HighlightElement.highlightElement(WebDriverSingleton.getWebDriverInstance(), mail);
         new Actions(driver).contextClick(mail).build().perform();
 
         JavascriptExecutor jsExecutor = (JavascriptExecutor) driver;
@@ -160,7 +161,9 @@ public class HomePage extends AbstractPage {
     }
 
     public SignInPage logout() {
-        HighlightElement.highlightElement(driver, logoutLink);
+        new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
+                .until(ExpectedConditions.visibilityOf(logoutLink));
+        HighlightElement.highlightElement(WebDriverSingleton.getWebDriverInstance(), logoutLink);
         logoutLink.click();
         return new SignInPage(driver);
     }
@@ -172,11 +175,11 @@ public class HomePage extends AbstractPage {
 
     public ReloginPage newLogout() {
         MailLogger.debug("Logging out");
-        HighlightElement.highlightElement(driver, new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
+        HighlightElement.highlightElement(WebDriverSingleton.getWebDriverInstance(), new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
                 .until(ExpectedConditions.visibilityOf(loggedUserMenu)));
         new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
                 .until(ExpectedConditions.visibilityOf(loggedUserMenu)).click();
-        HighlightElement.highlightElement(driver, new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
+        HighlightElement.highlightElement(WebDriverSingleton.getWebDriverInstance(), new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
                 .until(ExpectedConditions.visibilityOf(logoutLinkInUserMenu)));
         new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
                 .until(ExpectedConditions.visibilityOf(logoutLinkInUserMenu)).click();
