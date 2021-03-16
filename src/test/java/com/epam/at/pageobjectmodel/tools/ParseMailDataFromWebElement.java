@@ -4,14 +4,16 @@ import com.epam.at.pageobjectmodel.reporting.MailLogger;
 
 public class ParseMailDataFromWebElement {
 
+    private static final String REGEX = "\\R";
+
     public static String getMailAddressTo(String mailData) {
-        String parsedMailAddressTo = splitMailData(mailData)[0].split("\\R")[0];
+        String parsedMailAddressTo = splitMailData(mailData)[0].split(REGEX)[0];
         MailLogger.info("Parsing mail data: Address To = " + parsedMailAddressTo);
         return parsedMailAddressTo;
     }
 
     public static String getMailSubject(String mailData) {
-        String parsedMailSubject = splitMailData(mailData)[0].split("\\R")[1];
+        String parsedMailSubject = splitMailData(mailData)[0].split(REGEX)[1];
         MailLogger.info("Parsing mail data: Subject = " + parsedMailSubject);
         return parsedMailSubject;
     }

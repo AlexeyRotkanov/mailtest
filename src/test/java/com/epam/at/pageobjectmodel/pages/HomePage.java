@@ -62,7 +62,7 @@ public class HomePage extends AbstractPage {
     }
 
     public EmailPopupPage startToCreateNewMail() {
-        MailLogger.debug("Starting to create new mail");
+        MailLogger.info("Starting to create new mail");
         HighlightElement.highlightElement(WebDriverSingleton.getWebDriverInstance(), new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
                 .until(ExpectedConditions.visibilityOf(createNewLetterButton)));
         new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
@@ -71,7 +71,7 @@ public class HomePage extends AbstractPage {
     }
 
     public EmailPopupPage startToCreateNewMailUsingHotKeys(WebDriver driver) {
-        MailLogger.debug("Starting to create new mail using hotkeys");
+        MailLogger.info("Starting to create new mail using hotkeys");
         HighlightElement.highlightElement(WebDriverSingleton.getWebDriverInstance(), new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
                 .until(ExpectedConditions.visibilityOf(createNewLetterButton)));
         new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
@@ -81,7 +81,7 @@ public class HomePage extends AbstractPage {
     }
 
     public HomePage openDraftsFolder() {
-        MailLogger.debug("Opening 'Draft' folder");
+        MailLogger.info("Opening 'Draft' folder");
         HighlightElement.highlightElement(WebDriverSingleton.getWebDriverInstance(), draftsFolder);
         draftsFolder.click();
 
@@ -89,7 +89,7 @@ public class HomePage extends AbstractPage {
     }
 
     public HomePage openSentFolder() {
-        MailLogger.debug("Opening 'Sent' folder");
+        MailLogger.info("Opening 'Sent' folder");
         HighlightElement.highlightElement(WebDriverSingleton.getWebDriverInstance(), sendFolder);
         sendFolder.click();
 
@@ -97,7 +97,7 @@ public class HomePage extends AbstractPage {
     }
 
     public HomePage openTrashFolder() {
-        MailLogger.debug("Opening 'Trash' folder");
+        MailLogger.info("Opening 'Trash' folder");
         HighlightElement.highlightElement(WebDriverSingleton.getWebDriverInstance(), new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
                 .until(ExpectedConditions.visibilityOf(trashFolder)));
         new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
@@ -174,7 +174,7 @@ public class HomePage extends AbstractPage {
     }
 
     public ReloginPage newLogout() {
-        MailLogger.debug("Logging out");
+        MailLogger.info("Logging out");
         HighlightElement.highlightElement(WebDriverSingleton.getWebDriverInstance(), new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
                 .until(ExpectedConditions.visibilityOf(loggedUserMenu)));
         new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)

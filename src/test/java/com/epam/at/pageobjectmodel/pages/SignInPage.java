@@ -36,7 +36,7 @@ public class SignInPage extends AbstractPage {
     }
 
     public HomePage signInToMailbox(String login, String password) {
-        MailLogger.info(String.format("Sign in with credentials: login = %s; password = %s", login, password));
+        MailLogger.info(String.format("Sign in by user: login = %s", login));
 
         fillInLogin(login);
         fillInPassword(password);

@@ -45,28 +45,28 @@ public class EmailPopupPage extends HomePage {
     }
 
     public EmailPopupPage fillInMailSubject(String mailSubject) {
-        MailLogger.info("Filling mail data: mail address = " + mailSubject);
+        MailLogger.info("Filling mail data: mail subject = " + mailSubject);
         HighlightElement.highlightElement(WebDriverSingleton.getWebDriverInstance(), mailSubjectField);
         mailSubjectField.sendKeys(mailSubject);
         return this;
     }
 
     public EmailPopupPage fillInMailBody(String mailBody) {
-        MailLogger.info("Filling mail data: mail address = " + mailBody);
+        MailLogger.info("Filling mail data: mail body = " + mailBody);
         HighlightElement.highlightElement(WebDriverSingleton.getWebDriverInstance(), mailBodyField);
         mailBodyField.sendKeys(mailBody);
         return this;
     }
 
     public EmailPopupPage saveMailAsDraft() {
-        MailLogger.debug("Saving mail as draft");
+        MailLogger.info("Saving mail as draft");
         HighlightElement.highlightElement(WebDriverSingleton.getWebDriverInstance(), saveDraftButton);
         saveDraftButton.click();
         return this;
     }
 
     public EmailPopupPage saveMailAsDraftUsingHotKeys() {
-        MailLogger.debug("Saving mail as draft using hotkeys");
+        MailLogger.info("Saving mail as draft using hotkeys");
         Actions action = new Actions(driver);
         action.keyDown(Keys.CONTROL).sendKeys("s").build().perform();
         action.keyUp(Keys.CONTROL).build().perform();
@@ -74,14 +74,14 @@ public class EmailPopupPage extends HomePage {
     }
 
     public HomePage closeMailPopup() {
-        MailLogger.debug("Closing draft mail pop-up");
+        MailLogger.info("Closing draft mail pop-up");
         HighlightElement.highlightElement(WebDriverSingleton.getWebDriverInstance(), closeMailButton);
         closeMailButton.click();
         return new HomePage(driver);
     }
 
     public SentPopupPage sendDraftMail() {
-        MailLogger.debug("Sending draft mail");
+        MailLogger.info("Sending draft mail");
         HighlightElement.highlightElement(WebDriverSingleton.getWebDriverInstance(), new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
                 .until(ExpectedConditions.visibilityOf(sendDraftButton)));
         new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)

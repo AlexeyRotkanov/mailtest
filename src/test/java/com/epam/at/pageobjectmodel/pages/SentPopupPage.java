@@ -19,7 +19,7 @@ public class SentPopupPage extends HomePage {
     }
 
     public HomePage closeSentMailPopup() {
-        MailLogger.debug("Closing 'Sent Mail' pop-up");
+        MailLogger.info("Closing 'Sent Mail' pop-up");
         HighlightElement.highlightElement(WebDriverSingleton.getWebDriverInstance(), new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)
                 .until(ExpectedConditions.elementToBeClickable(closeSendPopupButton)));
         new WebDriverWait(driver, WAIT_TIMEOUT_SECONDS)

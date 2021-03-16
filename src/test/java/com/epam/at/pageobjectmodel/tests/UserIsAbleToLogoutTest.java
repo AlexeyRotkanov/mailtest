@@ -23,7 +23,6 @@ public class UserIsAbleToLogoutTest extends InitialTest {
                 .logout();
 
         String currentUrl = WebDriverSingleton.getWebDriverInstance().getCurrentUrl();
-        MailLogger.debug("URL after logout is: " + currentUrl);
         boolean isUserLoggedOut = currentUrl.contains("logout");
         Assert.assertTrue(isUserLoggedOut, "User is not logged out");
     }
